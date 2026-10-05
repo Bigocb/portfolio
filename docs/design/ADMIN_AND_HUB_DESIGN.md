@@ -273,7 +273,7 @@ provenance, agent-readable output, tailored recruiter pages) are all inside that
 | ----- | ----------------------------------------------------------------------------------------- | -------- |
 | 0     | **Publish boundary and claims.** Hub: visibility columns, `claims` (with computed `verified`, export fails on unverified public claims), `identity`, `publish export` CLI writing the snapshot locally including `resume.json` and `llms.txt`. Portfolio: `synced/` collection with zod schemas, pages read from it, serves `/resume.json` and `/llms.txt`, JSON-LD on every page. Snapshot committed by hand. | 1 weekend |
 | 1     | **Admin UI and PR delivery.** Hub: `/api/publish` opens the PR; publish log. Admin UI: Overview, Identity, Experience, Projects, Claims, Capabilities, Preview, Publish. | 1 to 2 weeks |
-| 2     | **Writeups and tailored pages.** Story-to-draft writeups; `writings` export to `projects/*.md`; resume `.docx` built at publish and attached. Per-application `/for/<token>` pages exported alongside, `noindex`. Caddy log tail posts view events back to job_hunt. | 1 to 2 weeks |
+| 2     | **Writeups and tailored pages.** Story-to-draft writeups; `writings` export to `projects/*.md`; resume `.docx` built at publish and attached. Per-application `/for/<token>` pages exported alongside, `noindex`. View-event tracking is split out to 2.5b and deferred until tailored links are sent at volume. | 1 to 2 weeks |
 | 3     | **Read-only MCP server** in job_hunt over the last published snapshot (not the live vault). Tools: `search_bullets`, `get_experience`, `get_project`, `get_claims`. | 1 week   |
 | 4     | **Extract the hub** into its own service (Postgres, Render or home lab) once Tapestry or Sage becomes a consumer. job_hunt becomes a client. | later    |
 
@@ -304,8 +304,10 @@ These need nothing beyond job_hunt and this repo, and are scheduled above.
    and bullets reordered for that role and the matching claims up top, `noindex`. The outreach
    email links to it. Still fully static (one extra page per active application). A small
    tail script on the Caddy host posts `/for/*` hits back to job_hunt as a "viewed" event on
-   the application, which becomes a follow-up timing signal. Scheduled after Phase 1 only so
-   the visibility and redaction rules have been exercised once before a stranger gets a URL.
+   the application, which becomes a follow-up timing signal -- **deferred (task 2.5b) until
+   tailored links are sent at volume**, since tracking turns the page from a courtesy into a
+   lead-scoring instrument. Scheduled after Phase 1 only so the visibility and redaction rules
+   have been exercised once before a stranger gets a URL.
 
 ## 8b. Ideas for later (need the hub, Tapestry, or Sage)
 

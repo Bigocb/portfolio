@@ -33,6 +33,11 @@ Read these before every task.
    `feat(site):`, `feat(mcp):` or `test:` as appropriate.
 8. **When something in this plan contradicts the code you find, stop and report** rather than
    guessing. The plan was written against HUB commit `9593e50` and SITE commit `a045fa8`.
+9. **The public surface never touches the database.** No module serving the public surface
+   (the snapshot loader, the public MCP server, the `resume.json` writer, the `llms.txt`
+   writer) may import `job_hunt.db` or `job_hunt.experience`, directly or transitively. They
+   read the rendered snapshot only. This is the structural guarantee that a bug in the public
+   surface cannot leak private rows; task 3.1 asserts it.
 
 Terminology (from HUB `CONTEXT.md` and `experience.py`):
 
@@ -269,13 +274,22 @@ Writes files and returns `{relative_path: sha256}`:
 | `src/content/synced/experience.json`  | `snapshot["experience"]`                                                |
 | `src/content/synced/stats.json`       | `snapshot["stats"]`                                                     |
 | `src/content/synced/capabilities.json`| `snapshot["capabilities"]`                                              |
-| `src/content/synced/projects.json`    | `snapshot["projects"]` (frontmatter data; prose stays in SITE `src/content/projects/*.md` until Phase 2) |
+| `src/content/synced/projects.json`    | `snapshot["projects"]` — **the single metadata source.** Machine-owned. |
 | `src/content/synced/manifest.json`    | `{"generated_at", "hub_version", "files": {path: sha256}}` (written last, excludes itself) |
 | `public/resume.json`                  | JSON Resume schema, see below                                           |
 | `public/llms.txt`                     | see below                                                               |
 
 All JSON is written with `indent=2`, `sort_keys=True`, `ensure_ascii=False`, trailing newline.
 Deterministic output matters: re-running with no DB changes must produce an identical tree.
+
+**Project representation (one source of truth).** `synced/projects.json` is the canonical
+machine metadata for every public project, in Phase 0 and always. SITE reads all project
+metadata (title, summary, status, featured, year, role, stack, repo, demo, order) from it.
+The Phase 2 generated `src/content/projects/<slug>.md` (task 2.1) carries **only** the prose
+body; the exporter does not put frontmatter metadata there, so the `.md` cannot drift from the
+DB. The existing hand-authored `.md` files keep their frontmatter until the project has a
+`writings` row, at which point the exporter replaces the file with a body-only version — note
+this transition in the PR body so the frontmatter removal is a reviewed change, not a surprise.
 
 `public/resume.json` follows the JSON Resume schema (`https://jsonresume.org/schema/`):
 `basics` (name, label=tagline, email, url=site_url, summary=pitch, profiles for GitHub and
@@ -312,6 +326,15 @@ def export(user_id: int = 1, out_dir: Path | None = None, db_path: Path | None =
 
 `collect` then `check` (raise `ExportError(problems)` if non-empty) then `render`. Returns the
 manifest dict. `out_dir` defaults to env `PORTFOLIO_DIR`.
+
+**Final step — publish the snapshot for the MCP server (task 3.1).** After a successful
+`render`, copy the rendered snapshot to the local serving path, default
+`data/users/<user_id>/export/latest/` (env `PUBLIC_SNAPSHOT_DIR`). Copy the same files `render`
+produced, including `public/resume.json` and the manifest — not the SITE-relative paths, and
+never the DB. The copy is atomic: render into `export/<timestamp>/`, then replace the
+`latest/` symlink or directory so a reader never sees a half-written snapshot. The MCP server
+reads `latest/` and nothing else. If the copy fails, the export still succeeds (the PR is the
+primary artifact) but log a warning; do not raise.
 
 Acceptance: `tests/test_publish.py` with a seeded `tmp_path` DB:
 
@@ -366,13 +389,21 @@ import { identitySchema, experienceSchema, statsSchema, capabilitiesSchema,
 
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
-  schema: ({ image }) => z.object({ /* unchanged fields */ }),
+  schema: ({ image }) => z.object({ title: z.string() }),
 });
 const writing = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/writing' }),
   schema: z.object({ /* unchanged */ }),
 });
 ```
+
+**Reconcile with task 2.1.** The `projects` collection's schema lists only `title`, because
+project metadata lives in `synced/projects.json` (task 0.5) and the Phase 2 generated `.md`
+files are body-only. In Phase 0, before any project has a generated body, the existing
+hand-authored `.md` frontmatter is still present; the SITE must read project metadata from
+`projectsData` (the synced JSON) for every rendered field, and use the `.md` file only as the
+prose body keyed by `public_slug`. Do not require the old frontmatter fields in the schema, and
+do not read them in pages.
 
 For the synced JSON files, `file()` expects an array of objects with an `id`, or an object
 keyed by id. Use `file('src/content/synced/experience.json', { parser: ... })` where the
@@ -430,6 +461,17 @@ still renders.
    must not be edited by hand, with the CLI command to regenerate.
 4. Add `public/robots.txt` if missing: `User-agent: *`, `Allow: /`, `Disallow: /for/`,
    `Sitemap: <site>/sitemap-index.xml`.
+
+**Path ownership.** Declare this in `docs/CONTENT.md` so no contributor guesses:
+
+- **Machine-owned (never hand-edit):** `src/content/synced/**`, generated `public/resume.json`,
+  `public/llms.txt`, `public/robots.txt`, and (Phase 2) generated `src/content/projects/*.md`.
+  Regenerate with the HUB exporter; hand edits are overwritten on the next publish.
+- **Human-owned:** `src/content/writing/*.md`, `content/source/**`, `docs/**`, and any page or
+  component not listed above. The exporter never touches these.
+
+The `src/content/projects/*.md` files are human-owned *until* the project has a `writings` row,
+after which the exporter owns the body (task 2.1).
 
 Acceptance: `npm run build && npm run test`; grep confirms no imports of
 `content/data/` remain; home page shows the identity name.
@@ -695,12 +737,23 @@ Routes `src/job_hunt/api/routes/writings.py`, prefix `/api/writings`: list, get,
 patch, delete, `POST /api/writings/draft/{project_id}`.
 
 Exporter change (task 0.5 `render`): for each public project that has a public
-`project_writeup` writing, write `src/content/projects/<public_slug>.md` with frontmatter
-built from the project (`title`, `summary` (max 200 chars, truncate at a word boundary),
-`status`, `featured`, `year`, `role`, `stack`, `repo`, `demo`, `order`,
-`confidential_review: false`) and the writing body. Projects without a writing are not
-written; the SITE keeps whatever markdown already exists for them. Add these paths to the
-manifest and to the PR delivery (task 1.3 step 3 handles any path).
+`project_writeup` writing, write `src/content/projects/<public_slug>.md` containing **only the
+prose body** — no frontmatter metadata (task 0.5's `synced/projects.json` is the single
+metadata source, per the "Project representation" note in task 0.5). A minimal frontmatter
+block with `title` only is acceptable if Astro's content loader requires it, but every other
+field (summary, status, featured, year, role, stack, repo, demo, order) stays in
+`projects.json` and is not duplicated here. Projects without a writing are not written; the
+SITE keeps whatever markdown already exists for them. Add these paths to the manifest and to
+the PR delivery (task 1.3 step 3 handles any path).
+
+**Prose round-trip policy.** Once the exporter writes `<public_slug>.md`, that file is
+**machine-owned**: hand edits to it in git are overwritten on the next publish. Editing prose
+happens in the HUB `writings` table (the admin editor), not in the SITE repo. To fail closed
+rather than clobber silently: if a generated `.md` exists on the base branch but its content
+does not match the hash recorded for it in the last manifest, the exporter must **raise**
+(`ExportError`) rather than overwrite, instructing the operator to reconcile in the HUB. The
+one-time transition from a hand-authored frontmatter file to a body-only generated file is a
+reviewed change; note it in the PR body.
 
 Add `writings` to the `check` rules: public writing whose project is not public is a problem.
 
@@ -708,8 +761,9 @@ Admin: add `WriteupsEditor.tsx` (list by project, "Draft from stories" button, a
 editor with `react-markdown` preview, visibility select, save).
 
 Acceptance: tests for CRUD and scoping; exporter test shows a project with a public writeup
-produces a `.md` with valid frontmatter (parse it with a simple regex and `yaml` is not a
-dependency, so assert line by line); draft function is tested with the LLM mocked.
+produces a body-only `.md` (assert line by line that it contains no metadata frontmatter beyond
+`title`); the fail-closed path is tested (a mismatched existing `.md` raises rather than
+overwrites); draft function is tested with the LLM mocked.
 
 ### Task 2.2 (HUB) Resume artifact at publish
 
@@ -763,6 +817,12 @@ public project by keyword overlap between its bullets plus stack and the applica
 }
 ```
 
+**Public-data-only invariant.** `build_tailored` receives the `collect()` snapshot and must
+not read the profile, the vault directly, or anything at `resume`/`private` visibility. The
+unguessable token hides *which company you applied to*; it must never be the only thing
+standing between a stranger and a private fact. Assert in tests that a sentinel in a private
+row never appears in any tailored JSON.
+
 `intro` is built from a template, not an LLM, to keep the export deterministic:
 `"Hello <company> team. This page highlights the parts of my work most relevant to the
 <title> role."` Everything on the tailored page is drawn from already-public data; the only
@@ -807,9 +867,22 @@ Acceptance: build with one fixture tailored file committed under
 Playwright test asserts `/for/example-token` has `meta[name=robots][content*=noindex]` and
 is absent from `dist/sitemap-0.xml`.
 
-### Task 2.5 (SITE and HUB) View events
+### Task 2.5 (SITE and HUB) View events — DEFERRED to 2.5b
 
-Caddyfile: inside the site block add
+**Status: split.** Task 2.5a (below, the `/for/<token>` page) ships in Phase 2. Task 2.5b
+(the view-event pipeline that follows) is **deferred** until tailored links are being sent at
+volume and a "viewed" signal would actually change a decision.
+
+Rationale (reconciliation D1): tracking changes what the artifact is. A tailored page is a
+courtesy to a hiring manager; with view events it becomes a lead-scoring instrument with its
+own consent surface, retention policy, and `PORTFOLIO_VIEW_SECRET` to operate. The value is
+only realized once enough pages are out to act on the data. Ship the page, defer the meter.
+
+**Task 2.5a (already covered by 2.3 + 2.4).** The `/for/<token>` page, its token lifecycle,
+the outreach link, `noindex`, and the sitemap exclusion are all in tasks 2.3 and 2.4 and are
+NOT deferred. Only the following is deferred.
+
+**Task 2.5b (SITE and HUB) — deferred, do not implement in Phase 2.** Caddyfile: inside the site block add
 
 ```
 log {
@@ -911,7 +984,30 @@ server module never imports `job_hunt.db` or `job_hunt.experience`.
 - **Phase 1**: a non-technical user can change a visibility flag and open a PR from the HUB
   web app; the PR shows only the intended diff; merging deploys.
 - **Phase 2**: a project writeup drafted from stories is live on the site; `/resume` offers a
-  `.docx` that matches the site; one real application has a `/for/<token>` page and its
-  views appear in the HUB.
+  `.docx` that matches the site; one real application has a `/for/<token>` page (view tracking
+  is deferred to 2.5b).
 - **Phase 3**: an MCP client can call `search_bullets` against the deployed HUB and gets only
   public data.
+
+---
+
+## Appendix C: future work (not scheduled)
+
+Recorded so they are not lost; none are in phases 0-3.
+
+- **Fact versioning.** Neither this plan nor the design gives hub facts a history.
+  `publishes` is publish history, not fact history. Decide later: accept mutated facts with git
+  history of the snapshot as a coarse audit trail (sufficient today), or add temporal columns /
+  a `claims_history` table when the hub is extracted (Phase 4).
+- **Gap detection.** Flag skills claimed with no evidencing public project; surface in the
+  admin as "you claim X but no public project demonstrates it."
+- **Self-updating LinkedIn.** Project public nodes into a LinkedIn headline / skills payload,
+  behind an explicit approval gate, never automatic.
+- **Interview simulator from the vault.** Generate STAR questions grounded in the real public
+  bullets and stories; track which stories are weak.
+- **Cross-domain prioritisation.** Extend project-registry's "what should I work on" ranking to
+  include life/health/professional balance (overlaps sage).
+- **project-registry as the meta layer.** Read every branch's status; become the front door.
+  Requires the Phase 4 extraction first.
+- **Hub naming.** `job_hunt` is the wrong name for the thing that holds professional identity.
+  Pick a hub name (`vault`, `loom`, `ledger`, `dossier`) before the first external consumer.
