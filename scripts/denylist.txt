@@ -1,0 +1,10 @@
+# Blocked terms for Wells Fargo confidentiality
+# Add internal system, product, or platform names here
+Minerva
+Vesta
+DaVinci
+Tachyon
+NOVA
+NGDC
+Arize
+PBDKD

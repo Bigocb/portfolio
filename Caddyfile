@@ -1,0 +1,59 @@
+{$SITE_DOMAIN} {
+  # Compression
+  encode zstd gzip
+
+  # Root directory (where Astro build output is)
+  root * /srv/dist
+
+  # Serve files
+  file_server
+
+  # Security headers
+  header {
+    # Prevent MIME type sniffing
+    X-Content-Type-Options "nosniff"
+
+    # Clickjacking protection
+    X-Frame-Options "SAMEORIGIN"
+
+    # XSS protection (legacy)
+    X-XSS-Protection "1; mode=block"
+
+    # Referrer policy
+    Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Permissions policy (feature policy)
+    Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()"
+
+    # Strict transport security (1 year)
+    Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+
+    # Content security policy
+    # Inline script hash for theme detection
+    Content-Security-Policy "default-src 'self'; script-src 'self' 'sha256-HASH_PLACEHOLDER'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'"
+  }
+
+  # Cache headers for static assets
+  @hasExt {
+    path_regexp \.(js|css|woff2?|ttf|otf|eot|svg|png|jpg|jpeg|gif|webp|ico)$
+  }
+
+  header @hasExt {
+    Cache-Control "public, max-age=31536000, immutable"
+  }
+
+  # Short cache for HTML
+  @html {
+    path_regexp \.html$|/$
+  }
+
+  header @html {
+    Cache-Control "public, max-age=3600"
+  }
+
+  # Custom 404
+  handle_errors {
+    rewrite * /404.html
+    file_server
+  }
+}
