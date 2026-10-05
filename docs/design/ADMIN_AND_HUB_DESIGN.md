@@ -265,57 +265,65 @@ Small, and all additive:
 
 ## 7. Phased plan
 
+Everything through Phase 3 is job_hunt plus a publish boundary plus this repo. No new
+service, no Postgres, no Tapestry or Sage involvement. The three headline ideas (claims with
+provenance, agent-readable output, tailored recruiter pages) are all inside that envelope.
+
 | Phase | Outcome                                                                                   | Effort   |
 | ----- | ----------------------------------------------------------------------------------------- | -------- |
-| 0     | Hub: visibility columns, `claims`, `identity`, `publish export` CLI writing the snapshot locally. Portfolio: `synced/` collection with zod schemas, pages read from it. Snapshot committed by hand. | 1 weekend |
-| 1     | Hub: `/api/publish` opens the PR; publish log. Admin UI: Overview, Identity, Experience, Projects, Claims, Publish. | 1 to 2 weeks |
-| 2     | Writeups with story-to-draft; `writings` export to `projects/*.md`; resume `.docx`/`.pdf` built at publish and attached; `/resume.json`, `/llms.txt`, JSON-LD. | 1 to 2 weeks |
-| 3     | Tailored recruiter pages and view signal back into job_hunt (section 8, idea 1).           | 1 week   |
-| 4     | Extract the vault into its own service (Postgres, Render or home lab) once Tapestry or Sage becomes a consumer. job_hunt becomes a client. Public read-only MCP server. | later    |
+| 0     | **Publish boundary and claims.** Hub: visibility columns, `claims` (with computed `verified`, export fails on unverified public claims), `identity`, `publish export` CLI writing the snapshot locally including `resume.json` and `llms.txt`. Portfolio: `synced/` collection with zod schemas, pages read from it, serves `/resume.json` and `/llms.txt`, JSON-LD on every page. Snapshot committed by hand. | 1 weekend |
+| 1     | **Admin UI and PR delivery.** Hub: `/api/publish` opens the PR; publish log. Admin UI: Overview, Identity, Experience, Projects, Claims, Capabilities, Preview, Publish. | 1 to 2 weeks |
+| 2     | **Writeups and tailored pages.** Story-to-draft writeups; `writings` export to `projects/*.md`; resume `.docx` built at publish and attached. Per-application `/for/<token>` pages exported alongside, `noindex`. Caddy log tail posts view events back to job_hunt. | 1 to 2 weeks |
+| 3     | **Read-only MCP server** in job_hunt over the last published snapshot (not the live vault). Tools: `search_bullets`, `get_experience`, `get_project`, `get_claims`. | 1 week   |
+| 4     | **Extract the hub** into its own service (Postgres, Render or home lab) once Tapestry or Sage becomes a consumer. job_hunt becomes a client. | later    |
 
 Phase 0 is deliberately tiny and already removes the hand-maintained JSON files that
-`CONTENT_TODO.md` is asking you to fill in.
+`CONTENT_TODO.md` is asking you to fill in. A step-by-step build plan for phases 0 to 3 is in
+`docs/design/IMPLEMENTATION_PLAN.md`.
 
 ---
 
-## 8. Bigger ideas (ranked by payoff over effort)
+## 8. Ideas in the first design (phases 0 to 3)
 
-1. **Per-application tailored portfolio pages.** When job_hunt generates a tailored resume for
-   an application, also generate `/for/<unguessable-token>` on the portfolio: the same site, but
-   featured projects and bullets reordered for that role, `noindex`, with the matching claims
-   up top. The outreach email links to it. Still fully static (the hub exports one extra page
-   per active application). Caddy access logs for `/for/*` are ingested back into job_hunt as a
-   "viewed" event on the application, which becomes a follow-up timing signal. Nothing else in
-   this plan gives a recruiter a reason to click as directly as this.
+These need nothing beyond job_hunt and this repo, and are scheduled above.
 
-2. **Agent-readable you.** You build MCP gateways for a living, so publish a read-only MCP
-   server over the public slice of the vault: `search_bullets`, `get_experience`,
-   `get_project`, `get_claims`. Plus `/resume.json` and `/llms.txt`. Recruiters increasingly
-   run agents over candidate material; being the candidate whose portfolio is queryable is a
-   story in itself, and it is also a live demo of the exact skill the site is selling.
+1. **Claims with provenance everywhere (Phase 0).** Every number on the site is a `claims` row
+   with evidence and an as-of date. The footnote becomes a link. Export fails when a public
+   claim lacks evidence, and the portfolio's zod schema requires it too. This turns "avoid
+   overclaiming" from a writing guideline into a constraint.
 
-3. **Claims with provenance everywhere.** Every number on the site is a `claims` row with
-   evidence and an as-of date. The footnote becomes a link. Builds fail when a public claim
-   lacks evidence. This turns "avoid overclaiming" from a writing guideline into a constraint.
+2. **Agent-readable you (Phase 0 for files, Phase 3 for MCP).** `/resume.json` (JSON Resume
+   schema) and `/llms.txt` are two more files the exporter renders from the same public
+   snapshot. The MCP server is the only part with a runtime: a read-only FastAPI router in
+   job_hunt that reads the last published snapshot rather than the live vault, so a bug in it
+   cannot leak private rows. You build MCP gateways for a living, so being the candidate whose
+   portfolio is queryable is both a story and a live demo of the skill the site is selling.
 
-4. **Story to writeup pipeline.** The story parser already converts freeform narration into
-   bullets. A second prompt converts the same stories into the five-section writeup template
-   in `docs/CONTENT.md`. Interview prep and portfolio content come from one act of telling the
-   story once. Tapestry's narrative engine is the natural home for this when the hub is
-   extracted, since it already does "memories into coherent prose with provenance".
+3. **Per-application tailored pages (Phase 2).** When job_hunt tailors a resume for an
+   application, also export `/for/<unguessable-token>`: the same site, with featured projects
+   and bullets reordered for that role and the matching claims up top, `noindex`. The outreach
+   email links to it. Still fully static (one extra page per active application). A small
+   tail script on the Caddy host posts `/for/*` hits back to job_hunt as a "viewed" event on
+   the application, which becomes a follow-up timing signal. Scheduled after Phase 1 only so
+   the visibility and redaction rules have been exercised once before a stranger gets a URL.
 
-5. **Public changelog of you.** `/changelog` fed from the publish log: "2026-10: published
+## 8b. Ideas for later (need the hub, Tapestry, or Sage)
+
+Story-to-draft writeups and the resume `.docx` artifact were in this list in the first draft;
+both are plain job_hunt work and are now scheduled in Phase 2.
+
+4. **Public changelog of you.** `/changelog` fed from the publish log: "2026-10: published
    writeup for MCP gateway; added claim: 6 agents routed". Shows momentum without a blog.
+   Cheap once the publish log exists; deferred only because it is cosmetic.
 
-6. **Resume as a build artifact.** `resume_docx.py` already renders. Run it at publish time,
-   version the output, and make `/resume` always link to the artifact that matches the live
-   site. The portfolio and the PDF can never disagree.
+5. **Tapestry as the narrative engine.** The Phase 2 story-to-draft step is a single prompt.
+   Tapestry already does "memories into coherent prose with provenance" with a real pipeline.
+   When the hub is extracted, Tapestry's story generator over hub stories replaces that prompt.
 
-7. **Sage and Tapestry as inputs, carefully.** Sage is deeply personal data; the only
-   defensible public projection is a tiny opt-in "now" line ("currently reading X, studying Y").
-   Tapestry's memories are private by default too, but its story generator over hub stories is
-   the right engine for idea 4. Treat both as sources that feed drafts into the hub, which then
-   go through the same visibility gate. Never let either write to the portfolio directly.
+6. **Sage as an input, carefully.** Sage is deeply personal data; the only defensible public
+   projection is a tiny opt-in "now" line ("currently reading X, studying Y"). Treat it as a
+   source that feeds drafts into the hub, which then go through the same visibility gate.
+   Never let Sage or Tapestry write to the portfolio directly.
 
 ---
 
@@ -371,7 +379,7 @@ to react to: `vault` (already the internal term), `loom` (pairs with Tapestry), 
    you always want to read the diff? (Recommendation: always read it until the alias and
    denylist rules have caught at least one real mistake, then auto-merge for claims and
    capability updates only.)
-3. Tailored pages (idea 1): is view tracking of a recruiter acceptable to you? It is
+3. Tailored pages (section 8, idea 3): is view tracking of a recruiter acceptable to you? It is
    first-party, no cookies, and only on token URLs you handed out, but it is still tracking.
 4. Which Sage signals, if any, should ever be public?
 5. Do you want the writeups to live in the hub (`writings`) or stay as markdown in this repo
