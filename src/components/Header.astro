@@ -1,0 +1,196 @@
+---
+const navItems = [
+  { label: 'Home', href: '/' },
+  { label: 'Projects', href: '/projects' },
+  { label: 'Experience', href: '/experience' },
+  { label: 'About', href: '/about' },
+  { label: 'Resume', href: '/resume' },
+  { label: 'Contact', href: '/contact' },
+];
+---
+
+<header>
+  <nav class="container">
+    <a href="/" class="logo">RC</a>
+    <details class="nav-menu">
+      <summary aria-label="Navigation menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </summary>
+      <ul>
+        {navItems.map((item) => (
+          <li>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+        <li>
+          <button class="theme-toggle" aria-label="Toggle theme">
+            🌙
+          </button>
+        </li>
+      </ul>
+    </details>
+    <ul class="nav-desktop">
+      {navItems.map((item) => (
+        <li>
+          <a href={item.href}>{item.label}</a>
+        </li>
+      ))}
+      <li>
+        <button class="theme-toggle" aria-label="Toggle theme">
+          🌙
+        </button>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<style>
+  header {
+    border-bottom: 1px solid var(--line);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem var(--gutter);
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: var(--ink);
+  }
+
+  .nav-desktop {
+    display: none;
+    list-style: none;
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .nav-desktop {
+      display: flex;
+      align-items: center;
+    }
+
+    .nav-menu {
+      display: none;
+    }
+  }
+
+  .nav-menu {
+    display: contents;
+  }
+
+  .nav-menu summary {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    padding: 0.5rem;
+  }
+
+  .nav-menu summary span {
+    width: 1.5rem;
+    height: 2px;
+    background: var(--ink);
+  }
+
+  .nav-menu[open] ul {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    right: var(--gutter);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    list-style: none;
+    gap: 0;
+    min-width: 200px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-menu ul li {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .nav-menu ul li:last-child {
+    border-bottom: none;
+  }
+
+  .nav-menu ul a,
+  .nav-menu ul button {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: var(--ink);
+    width: 100%;
+    text-align: left;
+  }
+
+  .nav-desktop a {
+    color: var(--ink);
+  }
+
+  .theme-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.25rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  @media (max-width: 767px) {
+    .nav-menu summary {
+      position: relative;
+      z-index: 101;
+    }
+
+    .nav-menu[open] ul {
+      z-index: 100;
+    }
+  }
+</style>
+
+<script>
+  function initThemeToggle() {
+    const toggle = document.querySelector('.theme-toggle');
+    if (!toggle) return;
+
+    function setTheme(theme: string) {
+      try {
+        if (theme === 'dark') {
+          document.documentElement.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.removeAttribute('data-theme');
+          localStorage.setItem('theme', 'light');
+        }
+      } catch {}
+    }
+
+    function getTheme(): string {
+      try {
+        const stored = localStorage.getItem('theme');
+        if (stored) return stored;
+      } catch {}
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    }
+
+    toggle.addEventListener('click', () => {
+      const current = getTheme();
+      setTheme(current === 'dark' ? 'light' : 'dark');
+    });
+  }
+
+  initThemeToggle();
+</script>

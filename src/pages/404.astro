@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404 | Not Found" description="This page could not be found.">
+  <div class="container prose">
+    <h1>404</h1>
+    <p>This page doesn't exist, but you can find what you're looking for here:</p>
+    <ul>
+      <li><a href="/">Home</a></li>
+      <li><a href="/projects">Projects</a></li>
+      <li><a href="/experience">Experience</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/contact">Contact</a></li>
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .container {
+    padding: 4rem var(--gutter);
+  }
+
+  h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  ul {
+    list-style: disc;
+    margin-left: 2rem;
+  }
+
+  li {
+    margin-bottom: 0.5rem;
+  }
+</style>

@@ -1,0 +1,46 @@
+---
+---
+
+<footer>
+  <div class="container">
+    <p>Self-hosted on my own servers. <a href="/colophon">How it's built.</a></p>
+    <nav>
+      <a href="/rss.xml">RSS</a>
+      <a href="https://github.com">GitHub</a>
+    </nav>
+  </div>
+</footer>
+
+<style>
+  footer {
+    border-top: 1px solid var(--line);
+    background: var(--bg);
+    padding: 3rem var(--gutter);
+    margin-top: 3rem;
+  }
+
+  .container {
+    max-width: var(--grid-width);
+    margin: 0 auto;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  nav {
+    display: flex;
+    gap: 2rem;
+    font-size: 0.9rem;
+  }
+
+  a {
+    color: var(--accent);
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+</style>
