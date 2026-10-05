@@ -1,4 +1,4 @@
-import { z } from 'astro:content';
+import { z } from 'zod';
 
 /**
  * Schemas for the hub-exported snapshot files under src/content/synced/.

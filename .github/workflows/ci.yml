@@ -27,6 +27,9 @@ jobs:
       - name: Type check
         run: npm run check
 
+      - name: Validate synced content
+        run: npx tsx scripts/check-synced.ts
+
       - name: Build
         run: npm run build
 
