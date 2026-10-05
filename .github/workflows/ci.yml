@@ -21,6 +21,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
       - name: Lint
         run: npm run lint
 
@@ -33,11 +36,8 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Run smoke tests
+      - name: Run tests
         run: npm run test
-
-      - name: Run accessibility tests
-        run: npx playwright test tests/accessibility.spec.ts
 
   accessibility:
     runs-on: ubuntu-latest
@@ -54,6 +54,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
 
       - name: Build
         run: npm run build

@@ -35,7 +35,9 @@ const jsonLd = personJsonLd();
         if (theme === 'dark') {
           document.documentElement.setAttribute('data-theme', 'dark');
         }
-      } catch {}
+      } catch {
+        // localStorage unavailable (private mode); fall back to system preference
+      }
     </script>
   </head>
   <body>

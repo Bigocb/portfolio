@@ -1,34 +1,29 @@
 import { test, expect } from '@playwright/test';
-import { injectAxe, checkA11y, getViolations } from 'axe-playwright';
+import AxeBuilder from '@axe-core/playwright';
 
 test.describe('accessibility', () => {
   test('home page has no accessibility violations', async ({ page }) => {
     await page.goto('/');
-    await injectAxe(page);
-    await checkA11y(page, null, {
-      detailedReport: true,
-      detailedReportOptions: {
-        html: true
-      }
-    });
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
   });
 
   test('projects page has no accessibility violations', async ({ page }) => {
     await page.goto('/projects');
-    await injectAxe(page);
-    await checkA11y(page);
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
   });
 
   test('project detail page has no accessibility violations', async ({ page }) => {
     await page.goto('/projects/conclave');
-    await injectAxe(page);
-    await checkA11y(page);
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
   });
 
   test('404 page has no accessibility violations', async ({ page }) => {
     await page.goto('/this-does-not-exist');
-    await injectAxe(page);
-    await checkA11y(page);
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
   });
 
   test('all pages have exactly one h1', async ({ page }) => {
@@ -37,29 +32,23 @@ test.describe('accessibility', () => {
     for (const route of routes) {
       await page.goto(route);
       const h1Count = await page.locator('h1').count();
-      expect(h1Count).toBe(1, `Route ${route} should have exactly one h1`);
+      expect(h1Count, `Route ${route} should have exactly one h1`).toBe(1);
     }
   });
 
   test('color contrast meets WCAG AA', async ({ page }) => {
     await page.goto('/');
-    await injectAxe(page);
-
-    // Check contrast violations specifically
-    const violations = await getViolations(page);
-    const contrastViolations = violations.filter(v => v.id === 'color-contrast');
-
-    expect(contrastViolations.length).toBe(0, 'Should have no color contrast violations');
+    const results = await new AxeBuilder({ page }).withTags(['wcag2aa']).analyze();
+    const contrastViolations = results.violations.filter(v => v.id === 'color-contrast');
+    expect(contrastViolations.length, 'Should have no color contrast violations').toBe(0);
   });
 
   test('keyboard navigation works', async ({ page }) => {
     await page.goto('/');
 
-    // Tab through focusable elements
     let focusedElement = await page.evaluate(() => document.activeElement?.tagName);
     expect(focusedElement).toBeTruthy();
 
-    // Tab through several elements
     for (let i = 0; i < 5; i++) {
       await page.keyboard.press('Tab');
       focusedElement = await page.evaluate(() => document.activeElement?.tagName);
@@ -67,11 +56,9 @@ test.describe('accessibility', () => {
     }
   });
 
-  test('skip link is present and keyboard accessible', async ({ page }) => {
+  test('main landmark is present', async ({ page }) => {
     await page.goto('/');
-
-    // Check for skip link (or main landmark)
     const main = page.locator('main');
-    await expect(main).toBeTruthy();
+    await expect(main).toBeVisible();
   });
 });

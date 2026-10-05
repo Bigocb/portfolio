@@ -59,7 +59,7 @@ async function runChecks(): Promise<boolean> {
     console.log('⚠️  Confidential projects requiring review:');
     confidentialProjects.forEach(file => console.log(`   - ${file}`));
 
-    if (process.env.ALLOW_UNREVIEWED !== '1' && !process.env.CI !== undefined) {
+    if (process.env.ALLOW_UNREVIEWED !== '1' && process.env.CI) {
       console.error(
         '\n❌ Production build blocked: unreviewed confidential content.\n' +
         '   Set ALLOW_UNREVIEWED=1 to allow (dev only)\n'

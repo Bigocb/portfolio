@@ -10,7 +10,7 @@ const navItems = [
 ---
 
 <header>
-  <nav class="container">
+  <nav class="container" aria-label="Primary">
     <a href="/" class="logo">RC</a>
     <details class="nav-menu">
       <summary aria-label="Navigation menu">
@@ -173,14 +173,18 @@ const navItems = [
           document.documentElement.removeAttribute('data-theme');
           localStorage.setItem('theme', 'light');
         }
-      } catch {}
+      } catch {
+        // localStorage unavailable in private mode; the DOM attribute still applies
+      }
     }
 
     function getTheme(): string {
       try {
         const stored = localStorage.getItem('theme');
         if (stored) return stored;
-      } catch {}
+      } catch {
+        // localStorage unavailable; fall through to system preference
+      }
       return window.matchMedia('(prefers-color-scheme: dark)').matches
         ? 'dark'
         : 'light';
