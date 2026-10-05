@@ -1,0 +1,128 @@
+{
+  "basics": {
+    "email": "bobby.cloutier@gmail.com",
+    "label": "Senior Software Engineer | AI Platform and Infrastructure",
+    "name": "Robin Cloutier",
+    "profiles": [
+      {
+        "network": "GitHub",
+        "url": "https://github.com/Bigocb"
+      },
+      {
+        "network": "LinkedIn",
+        "url": "https://linkedin.com/in/bobby-cloutier"
+      }
+    ],
+    "summary": "I build the plumbing that lets AI agents reach real systems safely, and the pipelines that get them into production. 15+ years across backend services, Kubernetes platforms, and data systems.",
+    "url": "https://example.com"
+  },
+  "projects": [
+    {
+      "description": "Open-source Agent Peer Protocol and Reputation System for collaborative AI agents.",
+      "keywords": [
+        "Python",
+        "Protocol Design",
+        "Agent Systems"
+      ],
+      "name": "Conclave",
+      "url": "https://github.com/Bigocb/conclave"
+    },
+    {
+      "description": "React-based job tracking application with custom pipeline management.",
+      "keywords": [
+        "React",
+        "TypeScript",
+        "Node.js"
+      ],
+      "name": "HUNTLOG"
+    },
+    {
+      "description": "Generic writeup of an MCP gateway pattern for agent access to backend systems with fine-grained control.",
+      "keywords": [
+        "Model Context Protocol",
+        "Python",
+        "Authentication"
+      ],
+      "name": "MCP Gateway Pattern"
+    },
+    {
+      "description": "Self-hosted Kubernetes cluster running at home with GitOps and observability.",
+      "keywords": [
+        "Kubernetes",
+        "Helm",
+        "GitOps",
+        "Container Networking"
+      ],
+      "name": "MicroK8s Home Lab"
+    },
+    {
+      "description": "Application for playing the SpaceTraders API game with a focus on automation.",
+      "keywords": [
+        "Python",
+        "API Integration",
+        "Game AI"
+      ],
+      "name": "stcommand",
+      "url": "https://github.com/bigocb/stcommand"
+    }
+  ],
+  "skills": [
+    {
+      "keywords": [
+        "Model Context Protocol",
+        "Agent Systems"
+      ],
+      "name": "Agent Integration"
+    },
+    {
+      "keywords": [
+        "Kubernetes",
+        "Helm",
+        "GitOps",
+        "Container Networking"
+      ],
+      "name": "Kubernetes And Openshift"
+    },
+    {
+      "keywords": [
+        "CI/CD",
+        "GitOps"
+      ],
+      "name": "CI/CD And GitOps"
+    },
+    {
+      "keywords": [
+        "Observability"
+      ],
+      "name": "Observability"
+    },
+    {
+      "keywords": [
+        "Data Pipelines"
+      ],
+      "name": "Data Pipelines"
+    }
+  ],
+  "work": [
+    {
+      "name": "Large Financial Institution",
+      "position": "Senior Software Engineer",
+      "startDate": "2021",
+      "summary": "AI platform and infrastructure team"
+    },
+    {
+      "endDate": "2021",
+      "name": "Previous Company",
+      "position": "Senior Engineer",
+      "startDate": "2018",
+      "summary": "Backend services and Kubernetes"
+    },
+    {
+      "endDate": "2018",
+      "name": "Earlier Work",
+      "position": "Software Engineer",
+      "startDate": "2008",
+      "summary": "Various backend and infrastructure roles"
+    }
+  ]
+}

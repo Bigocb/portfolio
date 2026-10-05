@@ -28,4 +28,18 @@ test.describe('smoke tests', () => {
     );
     expect(isFocused).toBe(true);
   });
+
+  test('resume.json is served and parses', async ({ request }) => {
+    const res = await request.get('/resume.json');
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body.basics.name).toBeTruthy();
+  });
+
+  test('home page includes Person JSON-LD', async ({ page }) => {
+    await page.goto('/');
+    const ld = await page.locator('script[type="application/ld+json"]').first().textContent();
+    const data = JSON.parse(ld || '{}');
+    expect(data['@type']).toBe('Person');
+  });
 });

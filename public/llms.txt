@@ -1,0 +1,24 @@
+# Robin Cloutier
+> Senior Software Engineer | AI Platform and Infrastructure
+
+I build the plumbing that lets AI agents reach real systems safely, and the pipelines that get them into production. 15+ years across backend services, Kubernetes platforms, and data systems.
+
+## Projects
+- [Conclave](https://example.com/projects/conclave): Open-source Agent Peer Protocol and Reputation System for collaborative AI agents.
+- [HUNTLOG](https://example.com/projects/huntlog): React-based job tracking application with custom pipeline management.
+- [MCP Gateway Pattern](https://example.com/projects/mcp-gateway): Generic writeup of an MCP gateway pattern for agent access to backend systems with fine-grained control.
+- [MicroK8s Home Lab](https://example.com/projects/microk8s-homelab): Self-hosted Kubernetes cluster running at home with GitOps and observability.
+- [stcommand](https://example.com/projects/stcommand): Application for playing the SpaceTraders API game with a focus on automation.
+
+## Experience
+- Large Financial Institution, Senior Software Engineer (2021-present)
+- Previous Company, Senior Engineer (2018-2021)
+- Earlier Work, Software Engineer (2008-2018)
+
+## Claims
+- 15+ years of production engineering (as of 2026-10-01; evidence: github.com/Bigocb)
+- 6 agents routing through an MCP server I built (as of 2026-10-01; evidence: MCP gateway used in production)
+- ~1M rows returned in under 30 seconds from a Postgres reporting layer (as of 2026-10-01; evidence: Postgres reporting layer)
+
+## Machine-readable
+- https://example.com/resume.json
