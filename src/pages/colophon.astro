@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Colophon | Robin Cloutier"
+  description="How this site is built and hosted."
+>
+  <div class="container prose">
+    <h1>Colophon</h1>
+
+    <section>
+      <h2>How this site is built</h2>
+      <p>
+        This portfolio is a static site built with <a href="https://astro.build" target="_blank">Astro</a>,
+        a modern web framework optimized for content. The source code is written in TypeScript with strict type checking,
+        and all content lives in Markdown files with typed frontmatter.
+      </p>
+
+      <h3>Technology stack</h3>
+      <ul>
+        <li><strong>Framework:</strong> Astro (static site generation)</li>
+        <li><strong>Language:</strong> TypeScript (strict mode)</li>
+        <li><strong>Content:</strong> Markdown with Zod schemas</li>
+        <li><strong>Styling:</strong> Plain CSS with design tokens</li>
+        <li><strong>Fonts:</strong> Inter and JetBrains Mono (self-hosted)</li>
+        <li><strong>No JavaScript:</strong> Core content works without JS; theme toggle and copy buttons are optional enhancements</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Hosting and deployment</h2>
+      <p>
+        This site is self-hosted on my own servers, deployed via Docker and Caddy.
+      </p>
+
+      <h3>Infrastructure</h3>
+      <ul>
+        <li><strong>Web server:</strong> Caddy (automatic HTTPS, reverse proxy)</li>
+        <li><strong>Container:</strong> Docker (multi-stage build)</li>
+        <li><strong>Deployment:</strong> GitHub Actions CI/CD</li>
+        <li><strong>Where it runs:</strong> TODO(owner): Describe your server setup (e.g., "home lab", "personal VM", "MicroK8s cluster")</li>
+      </ul>
+
+      <h3>Security and performance</h3>
+      <ul>
+        <li>Automatic HTTPS with Caddy</li>
+        <li>Security headers (CSP, HSTS, X-Content-Type-Options, etc.)</li>
+        <li>Gzip and Zstd compression</li>
+        <li>Long cache headers for hashed assets</li>
+        <li>Short cache for HTML</li>
+        <li>No third-party tracking or analytics</li>
+        <li>No external fonts, scripts, or embeds that phone home</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Source code</h2>
+      <p>
+        TODO(owner): The source for this site is TODO: [link to public repo or note if private].
+      </p>
+    </section>
+
+    <section>
+      <h2>Design and accessibility</h2>
+      <ul>
+        <li>WCAG 2.2 AA compliant</li>
+        <li>Responsive design (works at 320px and up)</li>
+        <li>Light and dark themes following system preference</li>
+        <li>No horizontal scroll at any viewport</li>
+        <li>Keyboard-only navigation supported</li>
+        <li>Semantic HTML with proper landmarks</li>
+      </ul>
+    </section>
+
+    <div class="nav-back">
+      <a href="/">← Back home</a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .container {
+    padding: 3rem var(--gutter);
+    max-width: var(--measure);
+  }
+
+  section {
+    margin-bottom: 2rem;
+  }
+
+  section h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  section h3 {
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+  }
+
+  section ul {
+    margin: 1rem 0;
+  }
+
+  section li {
+    margin-bottom: 0.5rem;
+  }
+
+  section a {
+    color: var(--accent);
+  }
+
+  section a:hover {
+    text-decoration: underline;
+  }
+
+  .nav-back {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-back a {
+    color: var(--accent);
+  }
+</style>

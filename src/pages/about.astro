@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="About | Robin Cloutier"
+  description="About Robin Cloutier, Senior Software Engineer."
+>
+  <div class="container prose">
+    <h1>About me</h1>
+
+    <section>
+      <p>TODO(owner): Add personal bio here. Keep it human and personal, 2-3 short paragraphs.</p>
+    </section>
+
+    <section>
+      <h2>How I work</h2>
+      <p>TODO(owner): Describe your working style, values, and approach to engineering.</p>
+    </section>
+
+    <section>
+      <h2>Beyond code</h2>
+      <p>TODO(owner): What do you do outside of work?</p>
+    </section>
+
+    <div class="nav-back">
+      <a href="/">← Back home</a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .container {
+    padding: 3rem var(--gutter);
+    max-width: var(--measure);
+  }
+
+  section {
+    margin-bottom: 2rem;
+  }
+
+  section h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .nav-back {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-back a {
+    color: var(--accent);
+  }
+</style>

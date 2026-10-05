@@ -1,0 +1,108 @@
+---
+import Base from '../layouts/Base.astro';
+import links from '../content/data/links.json';
+---
+
+<Base
+  title="Contact | Robin Cloutier"
+  description="Get in touch with Robin Cloutier."
+>
+  <div class="container prose">
+    <h1>Contact</h1>
+
+    <p>I'd love to hear from you. Here's how to get in touch:</p>
+
+    <div class="contact-links">
+      {links.email && (
+        <div class="contact-method">
+          <h3>Email</h3>
+          <a href={`mailto:${links.email}`} class="contact-link">
+            {links.email}
+          </a>
+        </div>
+      )}
+
+      {links.github && (
+        <div class="contact-method">
+          <h3>GitHub</h3>
+          <a href={links.github} target="_blank" rel="noopener noreferrer" class="contact-link">
+            {links.github.replace('https://github.com/', '@')}
+          </a>
+        </div>
+      )}
+
+      {links.linkedin && (
+        <div class="contact-method">
+          <h3>LinkedIn</h3>
+          <a href={links.linkedin} target="_blank" rel="noopener noreferrer" class="contact-link">
+            View profile
+          </a>
+        </div>
+      )}
+    </div>
+
+    <section class="response-time">
+      <h2>Response time</h2>
+      <p>I try to respond to emails within 2-3 business days. For urgent matters, feel free to reach out on LinkedIn or GitHub.</p>
+    </section>
+
+    <div class="nav-back">
+      <a href="/">← Back home</a>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .container {
+    padding: 3rem var(--gutter);
+    max-width: var(--measure);
+  }
+
+  .contact-links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+
+  .contact-method h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+  }
+
+  .contact-link {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+
+  .contact-link:hover {
+    opacity: 0.9;
+  }
+
+  .response-time {
+    margin-top: 3rem;
+    padding: 2rem;
+    background: var(--surface);
+    border-radius: 6px;
+  }
+
+  .response-time h2 {
+    margin-top: 0;
+  }
+
+  .nav-back {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-back a {
+    color: var(--accent);
+  }
+</style>

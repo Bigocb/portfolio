@@ -7,6 +7,14 @@ const featured = allProjects
   .filter(p => p.data.featured)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
+
+// Import data
+import stats from '../content/data/stats.json';
+import capabilities from '../content/data/capabilities.json';
+import experience from '../content/data/experience.json';
+
+// Filter verified stats
+const verifiedStats = stats.filter(s => s.verified);
 ---
 
 <Base title="Robin Cloutier | Senior Software Engineer" description="Portfolio of Robin Cloutier, Senior Software Engineer focused on AI platform and infrastructure work.">
@@ -22,39 +30,54 @@ const featured = allProjects
     </div>
   </div>
 
-  <section class="stats">
-    <div class="container">
-      <div class="stat-tile">
-        <div class="stat-value">15+</div>
-        <div class="stat-label">years of production engineering</div>
+  {verifiedStats.length > 0 && (
+    <section class="stats">
+      <div class="container">
+        {verifiedStats.map(stat => (
+          <div class="stat-tile">
+            <div class="stat-value">{stat.value}</div>
+            <div class="stat-label">{stat.label}</div>
+            {stat.footnote && <div class="stat-footnote">{stat.footnote}</div>}
+          </div>
+        ))}
       </div>
-      <div class="stat-tile">
-        <div class="stat-value">6</div>
-        <div class="stat-label">agents routing through an MCP server I built</div>
-      </div>
-      <div class="stat-tile">
-        <div class="stat-value">~1M</div>
-        <div class="stat-label">rows returned in under 30 seconds from a Postgres reporting layer</div>
-      </div>
-      <div class="stat-tile placeholder">
-        <div class="stat-value">?</div>
-        <div class="stat-label">TODO: owner provides metric</div>
-      </div>
-    </div>
-  </section>
+    </section>
+  )}
 
   <section class="capabilities">
     <div class="container">
       <h2>Core capabilities</h2>
       <ul>
-        <li>Agent integration and MCP protocol design</li>
-        <li>Kubernetes and OpenShift platforms</li>
-        <li>CI/CD and GitOps pipelines</li>
-        <li>Observability and monitoring systems</li>
-        <li>Data pipelines and stream processing</li>
+        {capabilities.map(cap => (
+          <li>
+            <strong>{cap.title}</strong>
+            <p>{cap.description}</p>
+          </li>
+        ))}
       </ul>
     </div>
   </section>
+
+  {experience.length > 0 && (
+    <section class="experience">
+      <div class="container">
+        <h2>Career arc</h2>
+        <div class="timeline">
+          {experience.map(job => (
+            <div class="timeline-entry">
+              <div class="timeline-marker"></div>
+              <div class="timeline-content">
+                <h3>{job.company}</h3>
+                <p class="role">{job.role}</p>
+                <p class="years">{job.years}</p>
+                {job.note && <p class="note">{job.note}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 
   {featured.length > 0 && (
     <section class="featured-projects">
@@ -83,6 +106,17 @@ const featured = allProjects
       </div>
     </section>
   )}
+
+  <section class="closing">
+    <div class="container prose">
+      <p>I connect AI agents to the systems they need and help get them safely into production: governed integrations, repeatable pipelines, and infrastructure that stays observable.</p>
+      <div class="closing-links">
+        <a href="/contact">Get in touch</a>
+        <a href="/projects">See projects</a>
+        <a href="/resume">View resume</a>
+      </div>
+    </div>
+  </section>
 </Base>
 
 <style>
@@ -166,6 +200,12 @@ const featured = allProjects
     color: var(--muted);
   }
 
+  .stat-footnote {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 0.5rem;
+  }
+
   .capabilities {
     padding: 3rem var(--gutter);
   }
@@ -186,6 +226,81 @@ const featured = allProjects
     padding: 1rem;
     border-left: 3px solid var(--accent);
     padding-left: 1rem;
+    list-style: none;
+  }
+
+  .capabilities li strong {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  .capabilities li p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .experience {
+    padding: 3rem var(--gutter);
+    background: var(--surface);
+  }
+
+  .experience h2 {
+    margin-bottom: 2rem;
+  }
+
+  .timeline {
+    position: relative;
+    max-width: var(--measure);
+  }
+
+  .timeline-entry {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .timeline-marker {
+    width: 16px;
+    height: 16px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-top: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .timeline-entry:not(:last-child) .timeline-marker::after {
+    content: '';
+    position: absolute;
+    left: 7px;
+    top: 24px;
+    width: 2px;
+    height: calc(100% + 2rem);
+    background: var(--line);
+  }
+
+  .timeline-content h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.1rem;
+  }
+
+  .timeline-content .role {
+    font-weight: 500;
+    margin: 0.25rem 0;
+  }
+
+  .timeline-content .years {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0.25rem 0;
+  }
+
+  .timeline-content .note {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin: 0.5rem 0 0 0;
   }
 
   .featured-projects {
@@ -233,6 +348,38 @@ const featured = allProjects
     text-decoration: underline;
   }
 
+  .closing {
+    padding: 3rem var(--gutter);
+    text-align: center;
+  }
+
+  .closing p {
+    font-size: 1.1rem;
+    max-width: var(--measure);
+    margin: 0 auto 2rem;
+  }
+
+  .closing-links {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .closing-links a {
+    padding: 0.75rem 1.5rem;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+
+  .closing-links a:hover {
+    opacity: 0.9;
+  }
+
   @media (max-width: 768px) {
     .hero h1 {
       font-size: 2rem;
@@ -249,6 +396,19 @@ const featured = allProjects
     .btn {
       width: 100%;
       text-align: center;
+    }
+
+    .closing-links {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .closing-links a {
+      width: 100%;
+    }
+
+    .timeline-entry {
+      gap: 1rem;
     }
   }
 </style>

@@ -1,0 +1,121 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="Resume | Robin Cloutier"
+  description="Resume and CV of Robin Cloutier."
+>
+  <div class="resume-container">
+    <section class="resume-header">
+      <div class="container">
+        <h1>Resume</h1>
+        <div class="download-links">
+          <a href="#" class="btn">📄 Download PDF Resume</a>
+          <a href="#" class="btn">📋 Download Executive Summary</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="resume-content">
+      <div class="container prose">
+        <h2>TODO: Resume content</h2>
+        <p>The HTML resume will render from content/source/resume.md. Owner to provide.</p>
+
+        <h3>Sections to include:</h3>
+        <ul>
+          <li>Professional summary</li>
+          <li>Core competencies</li>
+          <li>Professional experience</li>
+          <li>Education</li>
+          <li>Certifications (if any)</li>
+          <li>Publications or speaking (if any)</li>
+        </ul>
+
+        <div class="note-box">
+          <strong>Note:</strong> PDF downloads require files at public/resume/Robin_Cloutier_Resume.pdf and public/resume/Robin_Cloutier_Executive_Summary.pdf.
+        </div>
+      </div>
+    </section>
+
+    <div class="nav-back">
+      <div class="container">
+        <a href="/">← Back home</a>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .resume-container {
+    min-height: 100vh;
+  }
+
+  .resume-header {
+    padding: 3rem var(--gutter);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .resume-header h1 {
+    margin-bottom: 2rem;
+  }
+
+  .download-links {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.2s;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  .resume-content {
+    padding: 3rem var(--gutter);
+  }
+
+  .resume-content .container {
+    max-width: var(--measure);
+  }
+
+  .note-box {
+    padding: 1rem;
+    background: var(--surface);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+    margin: 2rem 0;
+  }
+
+  .nav-back {
+    padding: 2rem var(--gutter);
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-back a {
+    color: var(--accent);
+  }
+
+  @media print {
+    .resume-header,
+    .nav-back,
+    .download-links {
+      display: none;
+    }
+
+    body {
+      background: white;
+      color: black;
+    }
+  }
+</style>
