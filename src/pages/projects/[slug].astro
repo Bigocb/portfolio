@@ -1,0 +1,259 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects');
+  return projects.map(project => ({
+    params: { slug: project.slug },
+    props: { project }
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+const allProjects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
+const projectIndex = allProjects.findIndex(p => p.slug === project.slug);
+const prevProject = projectIndex > 0 ? allProjects[projectIndex - 1] : null;
+const nextProject = projectIndex < allProjects.length - 1 ? allProjects[projectIndex + 1] : null;
+---
+
+<Base
+  title={`${project.data.title} | Robin Cloutier`}
+  description={project.data.summary}
+>
+  <article class="project-detail">
+    <div class="container">
+      <header class="project-header">
+        <h1>{project.data.title}</h1>
+        <div class="project-meta">
+          <span>{project.data.year}</span>
+          <span>•</span>
+          <span>{project.data.role}</span>
+          {project.data.status && (
+            <>
+              <span>•</span>
+              <span class={`status status-${project.data.status}`}>
+                {project.data.status}
+              </span>
+            </>
+          )}
+        </div>
+        <p class="summary">{project.data.summary}</p>
+        <div class="project-actions">
+          {project.data.repo && (
+            <a href={project.data.repo} class="btn">
+              Repository
+            </a>
+          )}
+          {project.data.demo && (
+            <a href={project.data.demo} class="btn">
+              Live Demo
+            </a>
+          )}
+        </div>
+        <div class="stack-tags">
+          {project.data.stack.map(tag => (
+            <a href={`/projects?stack=${encodeURIComponent(tag)}`} class="tag">
+              {tag}
+            </a>
+          ))}
+        </div>
+      </header>
+
+      <div class="content-wrapper">
+        <main class="prose">
+          <Content />
+        </main>
+      </div>
+
+      <nav class="project-nav">
+        {prevProject && (
+          <a href={`/projects/${prevProject.slug}`} class="nav-link prev">
+            ← {prevProject.data.title}
+          </a>
+        )}
+        {nextProject && (
+          <a href={`/projects/${nextProject.slug}`} class="nav-link next">
+            {nextProject.data.title} →
+          </a>
+        )}
+      </nav>
+    </div>
+  </article>
+</Base>
+
+<style>
+  .project-detail {
+    padding: 4rem var(--gutter) 3rem;
+  }
+
+  .project-header {
+    margin-bottom: 3rem;
+  }
+
+  .project-header h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .project-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.95rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .summary {
+    font-size: 1.1rem;
+    max-width: var(--measure);
+    margin-bottom: 1.5rem;
+  }
+
+  .project-actions {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: var(--accent);
+    color: var(--bg);
+    border-radius: 4px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: opacity 0.2s;
+  }
+
+  .btn:hover {
+    opacity: 0.9;
+  }
+
+  .status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  .status-active {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-maintained {
+    background: #cce5ff;
+    color: #004085;
+  }
+
+  .status-archived {
+    background: #e2e3e5;
+    color: #383d41;
+  }
+
+  .status-concept {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  :root[data-theme="dark"] .status-active {
+    background: #1e5631;
+    color: #90ee90;
+  }
+
+  :root[data-theme="dark"] .status-maintained {
+    background: #004085;
+    color: #90caf9;
+  }
+
+  :root[data-theme="dark"] .status-archived {
+    background: #4a4a4a;
+    color: #b0b0b0;
+  }
+
+  :root[data-theme="dark"] .status-concept {
+    background: #664d03;
+    color: #ffc107;
+  }
+
+  .stack-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag {
+    padding: 0.5rem 1rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    font-size: 0.85rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color 0.2s;
+  }
+
+  .tag:hover {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .content-wrapper {
+    max-width: var(--measure);
+    margin: 3rem auto;
+  }
+
+  .prose {
+    font-size: 1rem;
+  }
+
+  .project-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .nav-link {
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: 6px;
+    color: var(--ink);
+    text-decoration: none;
+    transition: transform 0.2s;
+  }
+
+  .nav-link:hover {
+    transform: translateY(-2px);
+  }
+
+  .nav-link.prev {
+    text-align: left;
+  }
+
+  .nav-link.next {
+    text-align: right;
+    grid-column: 2;
+  }
+
+  @media (max-width: 768px) {
+    .project-detail {
+      padding: 2rem var(--gutter);
+    }
+
+    .project-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .nav-link.next {
+      grid-column: auto;
+    }
+  }
+</style>

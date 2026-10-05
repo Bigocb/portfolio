@@ -1,0 +1,235 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+// Extract unique stack tags
+const allTags = [...new Set(projects.flatMap(p => p.data.stack))].sort();
+
+const currentTag = new URL(Astro.url).searchParams.get('stack');
+const filteredProjects = currentTag
+  ? projects.filter(p => p.data.stack.includes(currentTag))
+  : projects;
+---
+
+<Base
+  title="Projects | Robin Cloutier"
+  description="Portfolio of software engineering projects by Robin Cloutier."
+>
+  <div class="container prose">
+    <h1>Projects</h1>
+
+    <div class="filters">
+      <a href="/projects" class={!currentTag ? 'filter-chip active' : 'filter-chip'}>
+        All
+      </a>
+      {allTags.map(tag => (
+        <a
+          href={`/projects?stack=${encodeURIComponent(tag)}`}
+          class={currentTag === tag ? 'filter-chip active' : 'filter-chip'}
+        >
+          {tag}
+        </a>
+      ))}
+    </div>
+
+    <div class="projects-grid">
+      {filteredProjects.map(project => (
+        <article class="project-card">
+          <div class="card-header">
+            <h2>
+              <a href={`/projects/${project.slug}`}>
+                {project.data.title}
+              </a>
+            </h2>
+            <span class={`status status-${project.data.status}`}>
+              {project.data.status}
+            </span>
+          </div>
+          <p class="summary">{project.data.summary}</p>
+          <div class="card-meta">
+            <span class="year">{project.data.year}</span>
+            <span class="role">{project.data.role}</span>
+          </div>
+          <div class="stack-tags">
+            {project.data.stack.map(tag => (
+              <a
+                href={`/projects?stack=${encodeURIComponent(tag)}`}
+                class="stack-tag"
+              >
+                {tag}
+              </a>
+            ))}
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .filters {
+    display: flex;
+    gap: 0.75rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+  }
+
+  .filter-chip {
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    font-size: 0.9rem;
+    color: var(--ink);
+    text-decoration: none;
+    transition: background-color 0.2s, color 0.2s;
+  }
+
+  .filter-chip:hover {
+    background-color: var(--surface);
+  }
+
+  .filter-chip.active {
+    background-color: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    margin-top: 2rem;
+  }
+
+  .project-card {
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .project-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+  }
+
+  .card-header a {
+    color: var(--ink);
+  }
+
+  .card-header a:hover {
+    color: var(--accent);
+  }
+
+  .status {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    text-transform: uppercase;
+  }
+
+  .status-active {
+    background: #d4edda;
+    color: #155724;
+  }
+
+  .status-maintained {
+    background: #cce5ff;
+    color: #004085;
+  }
+
+  .status-archived {
+    background: #e2e3e5;
+    color: #383d41;
+  }
+
+  .status-concept {
+    background: #fff3cd;
+    color: #856404;
+  }
+
+  :root[data-theme="dark"] .status-active {
+    background: #1e5631;
+    color: #90ee90;
+  }
+
+  :root[data-theme="dark"] .status-maintained {
+    background: #004085;
+    color: #90caf9;
+  }
+
+  :root[data-theme="dark"] .status-archived {
+    background: #4a4a4a;
+    color: #b0b0b0;
+  }
+
+  :root[data-theme="dark"] .status-concept {
+    background: #664d03;
+    color: #ffc107;
+  }
+
+  .summary {
+    margin: 1rem 0;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin-bottom: 1rem;
+  }
+
+  .stack-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stack-tag {
+    padding: 0.25rem 0.5rem;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-size: 0.75rem;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .stack-tag:hover {
+    background: var(--accent);
+    color: var(--bg);
+    border-color: var(--accent);
+  }
+
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .card-header {
+      flex-direction: column;
+    }
+  }
+</style>

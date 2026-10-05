@@ -1,5 +1,12 @@
 ---
+import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+
+const allProjects = await getCollection('projects');
+const featured = allProjects
+  .filter(p => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
 ---
 
 <Base title="Robin Cloutier | Senior Software Engineer" description="Portfolio of Robin Cloutier, Senior Software Engineer focused on AI platform and infrastructure work.">
@@ -48,6 +55,34 @@ import Base from '../layouts/Base.astro';
       </ul>
     </div>
   </section>
+
+  {featured.length > 0 && (
+    <section class="featured-projects">
+      <div class="container">
+        <h2>Featured projects</h2>
+        <div class="projects-grid">
+          {featured.map(project => (
+            <article class="project-card">
+              <h3>
+                <a href={`/projects/${project.slug}`}>
+                  {project.data.title}
+                </a>
+              </h3>
+              <p>{project.data.summary}</p>
+              <div class="card-meta">
+                <span>{project.data.year}</span>
+                <span>•</span>
+                <span>{project.data.role}</span>
+              </div>
+              <a href={`/projects/${project.slug}`} class="read-more">
+                Read more →
+              </a>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
 </Base>
 
 <style>
@@ -151,6 +186,51 @@ import Base from '../layouts/Base.astro';
     padding: 1rem;
     border-left: 3px solid var(--accent);
     padding-left: 1rem;
+  }
+
+  .featured-projects {
+    padding: 3rem var(--gutter);
+  }
+
+  .featured-projects h2 {
+    margin-bottom: 2rem;
+  }
+
+  .featured-projects .projects-grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .project-card {
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+  }
+
+  .project-card h3 {
+    margin-top: 0;
+  }
+
+  .project-card a {
+    color: var(--accent);
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+    margin: 1rem 0;
+  }
+
+  .read-more {
+    display: inline-block;
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  .read-more:hover {
+    text-decoration: underline;
   }
 
   @media (max-width: 768px) {
