@@ -1,0 +1,27 @@
+[
+  {
+    "description": "MCP protocol design, agent peer protocols, feedback systems",
+    "technologies": ["Model Context Protocol", "Agent Systems"],
+    "title": "Agent Integration"
+  },
+  {
+    "description": "Platform engineering, cluster operations, GitOps",
+    "technologies": ["Kubernetes", "Helm", "GitOps", "Container Networking"],
+    "title": "Kubernetes And Openshift"
+  },
+  {
+    "description": "Pipeline design, automation, infrastructure as code",
+    "technologies": ["CI/CD", "GitOps"],
+    "title": "CI/CD And GitOps"
+  },
+  {
+    "description": "Monitoring, logging, tracing, alerting",
+    "technologies": ["Observability"],
+    "title": "Observability"
+  },
+  {
+    "description": "Stream processing, ETL, data warehousing",
+    "technologies": ["Data Pipelines"],
+    "title": "Data Pipelines"
+  }
+]

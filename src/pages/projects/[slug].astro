@@ -1,64 +1,68 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { projectsData } from '../../lib/synced';
 
 export async function getStaticPaths() {
   const projects = await getCollection('projects');
   return projects.map(project => ({
-    params: { slug: project.slug },
+    params: { slug: project.id },
     props: { project }
   }));
 }
 
 const { project } = Astro.props;
-const { Content } = await project.render();
-const allProjects = (await getCollection('projects')).sort((a, b) => a.data.order - b.data.order);
-const projectIndex = allProjects.findIndex(p => p.slug === project.slug);
+const { Content } = await render(project);
+const meta = projectsData.find(p => p.public_slug === project.id);
+const allProjects = [...projectsData].sort((a, b) => (a.sort_order ?? 999) - (b.sort_order ?? 999));
+const projectIndex = allProjects.findIndex(p => p.public_slug === project.id);
 const prevProject = projectIndex > 0 ? allProjects[projectIndex - 1] : null;
-const nextProject = projectIndex < allProjects.length - 1 ? allProjects[projectIndex + 1] : null;
+const nextProject = projectIndex >= 0 && projectIndex < allProjects.length - 1 ? allProjects[projectIndex + 1] : null;
 ---
 
 <Base
-  title={`${project.data.title} | Robin Cloutier`}
-  description={project.data.summary}
+  title={`${meta?.name ?? project.id} | Robin Cloutier`}
+  description={meta?.description ?? ''}
 >
   <article class="project-detail">
     <div class="container">
       <header class="project-header">
-        <h1>{project.data.title}</h1>
+        <h1>{meta?.name ?? project.id}</h1>
         <div class="project-meta">
-          <span>{project.data.year}</span>
-          <span>•</span>
-          <span>{project.data.role}</span>
-          {project.data.status && (
+          {meta?.year && <span>{meta.year}</span>}
+          {meta?.role && <span>•</span>}
+          {meta?.role && <span>{meta.role}</span>}
+          {meta?.status && (
             <>
               <span>•</span>
-              <span class={`status status-${project.data.status}`}>
-                {project.data.status}
+              <span class={`status status-${meta.status}`}>
+                {meta.status}
               </span>
             </>
           )}
         </div>
-        <p class="summary">{project.data.summary}</p>
+        {meta?.description && <p class="summary">{meta.description}</p>}
         <div class="project-actions">
-          {project.data.repo && (
-            <a href={project.data.repo} class="btn">
+          {meta?.repo_url && (
+            <a href={meta.repo_url} class="btn">
               Repository
             </a>
           )}
-          {project.data.demo && (
-            <a href={project.data.demo} class="btn">
+          {meta?.demo_url && (
+            <a href={meta.demo_url} class="btn">
               Live Demo
             </a>
           )}
         </div>
-        <div class="stack-tags">
-          {project.data.stack.map(tag => (
-            <a href={`/projects?stack=${encodeURIComponent(tag)}`} class="tag">
-              {tag}
-            </a>
-          ))}
-        </div>
+        {(meta?.stack ?? []).length > 0 && (
+          <div class="stack-tags">
+            {(meta?.stack ?? []).map(tag => (
+              <a href={`/projects?stack=${encodeURIComponent(tag)}`} class="tag">
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
       </header>
 
       <div class="content-wrapper">
@@ -69,13 +73,13 @@ const nextProject = projectIndex < allProjects.length - 1 ? allProjects[projectI
 
       <nav class="project-nav">
         {prevProject && (
-          <a href={`/projects/${prevProject.slug}`} class="nav-link prev">
-            ← {prevProject.data.title}
+          <a href={`/projects/${prevProject.public_slug}`} class="nav-link prev">
+            ← {prevProject.name}
           </a>
         )}
         {nextProject && (
-          <a href={`/projects/${nextProject.slug}`} class="nav-link next">
-            {nextProject.data.title} →
+          <a href={`/projects/${nextProject.public_slug}`} class="nav-link next">
+            {nextProject.name} →
           </a>
         )}
       </nav>

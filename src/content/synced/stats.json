@@ -1,0 +1,29 @@
+[
+  {
+    "as_of": "2026-10-01",
+    "evidence": "github.com/Bigocb",
+    "footnote": "",
+    "key": "years_production",
+    "label": "years of production engineering",
+    "value": "15+",
+    "verified": true
+  },
+  {
+    "as_of": "2026-10-01",
+    "evidence": "MCP gateway used in production",
+    "footnote": "as of Oct 2026",
+    "key": "agents_on_mcp_gateway",
+    "label": "agents routing through an MCP server I built",
+    "value": "6",
+    "verified": true
+  },
+  {
+    "as_of": "2026-10-01",
+    "evidence": "Postgres reporting layer",
+    "footnote": "",
+    "key": "rows_postgres_reporting",
+    "label": "rows returned in under 30 seconds from a Postgres reporting layer",
+    "value": "~1M",
+    "verified": true
+  }
+]

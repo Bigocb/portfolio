@@ -1,28 +1,21 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import { identity, stats, capabilities, experience, projectsData } from '../lib/synced';
 
-const allProjects = await getCollection('projects');
-const featured = allProjects
-  .filter(p => p.data.featured)
-  .sort((a, b) => a.data.order - b.data.order)
+const featured = [...projectsData]
+  .filter(p => p.public_slug && p.featured)
+  .sort((a, b) => (a.sort_order ?? 999) - (b.sort_order ?? 999))
   .slice(0, 3);
 
-// Import data
-import stats from '../content/data/stats.json';
-import capabilities from '../content/data/capabilities.json';
-import experience from '../content/data/experience.json';
-
-// Filter verified stats
 const verifiedStats = stats.filter(s => s.verified);
 ---
 
-<Base title="Robin Cloutier | Senior Software Engineer" description="Portfolio of Robin Cloutier, Senior Software Engineer focused on AI platform and infrastructure work.">
+<Base title={`${identity.display_name} | Senior Software Engineer`} description="Portfolio of Robin Cloutier, Senior Software Engineer focused on AI platform and infrastructure work.">
   <div class="hero">
     <div class="container">
-      <h1>Robin Cloutier</h1>
-      <p class="tagline">Senior Software Engineer | AI Platform and Infrastructure</p>
-      <p class="pitch">I build the plumbing that lets AI agents reach real systems safely, and the pipelines that get them into production. 15+ years across backend services, Kubernetes platforms, and data systems.</p>
+      <h1>{identity.display_name}</h1>
+      <p class="tagline">{identity.tagline}</p>
+      <p class="pitch">{identity.pitch}</p>
       <div class="cta">
         <a href="/projects" class="btn">See projects</a>
         <a href="/resume" class="btn btn-secondary">Download resume</a>
@@ -68,9 +61,9 @@ const verifiedStats = stats.filter(s => s.verified);
               <div class="timeline-marker"></div>
               <div class="timeline-content">
                 <h3>{job.company}</h3>
-                <p class="role">{job.role}</p>
+                <p class="role">{job.title}</p>
                 <p class="years">{job.years}</p>
-                {job.note && <p class="note">{job.note}</p>}
+                {job.public_note && <p class="note">{job.public_note}</p>}
               </div>
             </div>
           ))}
@@ -87,17 +80,17 @@ const verifiedStats = stats.filter(s => s.verified);
           {featured.map(project => (
             <article class="project-card">
               <h3>
-                <a href={`/projects/${project.slug}`}>
-                  {project.data.title}
+                <a href={`/projects/${project.public_slug}`}>
+                  {project.name}
                 </a>
               </h3>
-              <p>{project.data.summary}</p>
+              <p>{project.description}</p>
               <div class="card-meta">
-                <span>{project.data.year}</span>
+                <span>{project.year}</span>
                 <span>•</span>
-                <span>{project.data.role}</span>
+                <span>{project.role}</span>
               </div>
-              <a href={`/projects/${project.slug}`} class="read-more">
+              <a href={`/projects/${project.public_slug}`} class="read-more">
                 Read more →
               </a>
             </article>

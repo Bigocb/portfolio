@@ -1,0 +1,32 @@
+[
+  {
+    "company": "Large Financial Institution",
+    "employment_type": null,
+    "end_date": null,
+    "location": null,
+    "public_note": "AI platform and infrastructure team",
+    "start_date": "2021",
+    "title": "Senior Software Engineer",
+    "years": "2021-present"
+  },
+  {
+    "company": "Previous Company",
+    "employment_type": null,
+    "end_date": "2021",
+    "location": null,
+    "public_note": "Backend services and Kubernetes",
+    "start_date": "2018",
+    "title": "Senior Engineer",
+    "years": "2018-2021"
+  },
+  {
+    "company": "Earlier Work",
+    "employment_type": null,
+    "end_date": "2018",
+    "location": null,
+    "public_note": "Various backend and infrastructure roles",
+    "start_date": "2008",
+    "title": "Software Engineer",
+    "years": "2008-2018"
+  }
+]

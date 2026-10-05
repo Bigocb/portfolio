@@ -1,16 +1,17 @@
 ---
-import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import { projectsData } from '../../lib/synced';
 
-const allProjects = await getCollection('projects');
-const projects = allProjects.sort((a, b) => a.data.order - b.data.order);
+const projects = [...projectsData]
+  .filter(p => p.public_slug)
+  .sort((a, b) => (a.sort_order ?? 999) - (b.sort_order ?? 999));
 
 // Extract unique stack tags
-const allTags = [...new Set(projects.flatMap(p => p.data.stack))].sort();
+const allTags = [...new Set(projects.flatMap(p => p.stack))].sort();
 
 const currentTag = new URL(Astro.url).searchParams.get('stack');
 const filteredProjects = currentTag
-  ? projects.filter(p => p.data.stack.includes(currentTag))
+  ? projects.filter(p => p.stack.includes(currentTag))
   : projects;
 ---
 
@@ -40,21 +41,23 @@ const filteredProjects = currentTag
         <article class="project-card">
           <div class="card-header">
             <h2>
-              <a href={`/projects/${project.slug}`}>
-                {project.data.title}
+              <a href={`/projects/${project.public_slug}`}>
+                {project.name}
               </a>
             </h2>
-            <span class={`status status-${project.data.status}`}>
-              {project.data.status}
-            </span>
+            {project.status && (
+              <span class={`status status-${project.status}`}>
+                {project.status}
+              </span>
+            )}
           </div>
-          <p class="summary">{project.data.summary}</p>
+          <p class="summary">{project.description}</p>
           <div class="card-meta">
-            <span class="year">{project.data.year}</span>
-            <span class="role">{project.data.role}</span>
+            <span class="year">{project.year}</span>
+            <span class="role">{project.role}</span>
           </div>
           <div class="stack-tags">
-            {project.data.stack.map(tag => (
+            {project.stack.map(tag => (
               <a
                 href={`/projects?stack=${encodeURIComponent(tag)}`}
                 class="stack-tag"

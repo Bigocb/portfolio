@@ -1,15 +1,7 @@
 ---
 title: "HUNTLOG"
-
-summary: "React-based job tracking application with custom pipeline management."
-status: maintained
-featured: false
-year: 2022
-role: "Sole author"
-stack: ["React", "TypeScript", "Node.js"]
-order: 3
-confidential_review: false
 ---
+
 
 ## Problem
 

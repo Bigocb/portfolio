@@ -1,15 +1,7 @@
 ---
 title: "MCP Gateway Pattern"
-
-summary: "Generic writeup of an MCP gateway pattern for agent access to backend systems with fine-grained control."
-status: maintained
-featured: false
-year: 2025
-role: "Architect and contributor"
-stack: ["Model Context Protocol", "Python", "Authentication"]
-order: 5
-confidential_review: true
 ---
+
 
 ## Problem
 

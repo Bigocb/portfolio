@@ -85,62 +85,48 @@ This guide explains how to add projects, blog posts, and update site data.
 
 ## Editing Data Files
 
-### Update stats (`src/content/data/stats.json`)
+### Generated vs. hand-authored content
 
-Stats appear on the home page. Only `verified: true` stats show up:
+**Machine-owned (do NOT hand-edit; regenerate from the HUB):**
+- `src/content/synced/**` (identity, experience, stats, capabilities, projects, manifest)
+- `public/resume.json`, `public/llms.txt`
+- `public/robots.txt`
 
-```json
-[
-  {
-    "value": "15+",
-    "label": "years of production engineering",
-    "footnote": "",
-    "verified": true
-  }
-]
+These are written by `job_hunt publish export`. Regenerate with:
+
+```bash
+python -m job_hunt.cli publish export --out ../portfolio
 ```
 
-Edit to update metrics as your experience grows.
+**Human-owned:** `src/content/writing/*.md`, `content/source/**`, `docs/**`, and all
+pages/components not listed above.
 
-### Update capabilities (`src/content/data/capabilities.json`)
+Project metadata (summary, status, featured, stack, repo, ...) lives in
+`src/content/synced/projects.json`. The markdown files under `src/content/projects/`
+carry only a title and the prose body; project frontmatter is not the metadata source.
 
-Update core capabilities with descriptions:
+### Update stats (`src/content/synced/stats.json`)
 
-```json
-[
-  {
-    "title": "Agent integration",
-    "description": "MCP protocol design, agent peer protocols, feedback systems"
-  }
-]
+Do not edit by hand. Stats are `claims` in the HUB vault; each needs evidence and an
+as-of date to be exportable. Manage with:
+
+```bash
+python -m job_hunt.cli claim add --key years_production --value "15+" \
+  --label "years of production engineering" --evidence "<url>" --as-of 2026-01-01 --visibility public
 ```
 
-### Update experience (`src/content/data/experience.json`)
+### Update capabilities (`src/content/synced/capabilities.json`)
 
-Work history timeline (appears on /experience and home):
+Do not edit by hand. Capabilities are derived from `tech_used` on public projects.
 
-```json
-[
-  {
-    "company": "Company Name",
-    "role": "Your Title",
-    "years": "2023–present",
-    "note": "Optional: what you worked on"
-  }
-]
-```
+### Update experience (`src/content/synced/experience.json`)
 
-### Update contact links (`src/content/data/links.json`)
+Do not edit by hand. Managed as experiences in the HUB vault; set visibility and a
+public alias with `job_hunt experience set-visibility`.
 
-Email, GitHub, LinkedIn URLs:
+### Update contact links
 
-```json
-{
-  "email": "you@example.com",
-  "github": "https://github.com/yourname",
-  "linkedin": "https://linkedin.com/in/yourname"
-}
-```
+Do not edit by hand. Managed with `job_hunt identity set`.
 
 ## Adding Blog Posts (Optional)
 

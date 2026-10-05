@@ -1,16 +1,7 @@
 ---
 title: "stcommand"
-
-summary: "Application for playing the SpaceTraders API game with a focus on automation."
-status: maintained
-featured: false
-year: 2023
-role: "Sole author"
-stack: ["Python", "API Integration", "Game AI"]
-repo: "https://github.com/bigocb/stcommand"
-order: 2
-confidential_review: false
 ---
+
 
 ## Problem
 

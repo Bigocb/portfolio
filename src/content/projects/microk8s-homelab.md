@@ -1,15 +1,7 @@
 ---
 title: "MicroK8s Home Lab"
-
-summary: "Self-hosted Kubernetes cluster running at home with GitOps and observability."
-status: active
-featured: false
-year: "2020–present"
-role: "Sole operator"
-stack: ["Kubernetes", "Helm", "GitOps", "Container Networking"]
-order: 4
-confidential_review: false
 ---
+
 
 ## Problem
 

@@ -1,16 +1,7 @@
 ---
-title: Conclave
-
-summary: "Open-source Agent Peer Protocol and Reputation System for collaborative AI agents."
-status: active
-featured: true
-year: 2024
-role: "Sole author"
-stack: ["Python", "Protocol Design", "Agent Systems"]
-repo: "https://github.com/Bigocb/conclave"
-order: 1
-confidential_review: false
+title: "Conclave"
 ---
+
 
 ## Problem
 
