@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /for/
+
+Sitemap: https://example.com/sitemap-index.xml

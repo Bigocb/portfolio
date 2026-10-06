@@ -4,143 +4,90 @@ This guide explains how to add projects, blog posts, and update site data.
 
 ## Quick Start: Add a Project
 
-1. **Create a Markdown file** in `src/content/projects/`
+Projects are driven by the HUB experience vault, not hand-authored frontmatter.
+
+1. **Publish the project from the HUB.** Mark a vault project public with a slug:
+
    ```bash
-   cp src/content/projects/conclave.md src/content/projects/your-project.md
+   python -m job_hunt.cli project set-public <id> --visibility public --slug my-project --status active
+   python -m job_hunt.cli publish export --out ../portfolio
    ```
 
-2. **Edit the frontmatter** (the YAML at the top):
-   ```yaml
-   ---
-   title: "Your Project Name"
-   summary: "One sentence describing the project (max 200 chars)"
-   status: active          # or: maintained, archived, concept
-   featured: false         # set to true to show on home page (max 3)
-   year: 2024             # or "2023-2024" for date ranges
-   role: "Your role"      # e.g., "Sole author", "Lead engineer", "Contributor"
-   stack:
-     - TypeScript
-     - React
-     - AWS
-   repo: "https://github.com/user/repo"  # optional
-   demo: "https://example.com"           # optional
-   order: 1               # sort order on projects page (lower = first)
-   confidential_review: false # set to true if it contains employer content
-   ---
-   ```
+   This writes the metadata into `src/content/synced/projects.json` and generates
+   the route. See "Editing Data Files" below.
 
-3. **Write the project writeup** following this structure:
+2. **Add an optional prose writeup.** Create `src/content/projects/<slug>.md` with a
+   title and body; the exporter owns this file once a `writings` row exists (Phase 2).
+   Without a writeup, the project page shows the role's public bullets:
 
    ```markdown
+   ---
+   title: "My Project"
+   ---
+
    ## Problem
-   
-   What is it and why does it exist? 2-4 sentences about the problem it solves.
-   
+   ...
+
    ## Approach
-   
-   The key design decisions and alternatives you considered.
-   
-   ## Architecture
-   
-   A diagram (ASCII, Mermaid, or linked image) plus prose explaining the system.
-   
+   ...
+
    ## What was hard
-   
-   One or two real problems you encountered and how you solved them.
-   
+   ...
+
    ## Results / what I'd change
-   
-   Honest outcomes. What worked? What would you do differently? What did you learn?
-   
-   ## Links
-   
-   - [Repository](link)
-   - [Live demo](link)
+   ...
    ```
 
-4. **Run locally to preview**:
-   ```bash
-   npm run dev
-   # Opens http://localhost:3000, navigate to /projects/your-project
-   ```
+3. **Preview locally**: `npm run dev`, then open `/projects/<slug>`.
 
-5. **Check no errors**:
-   ```bash
-   npm run check   # type check
-   npm run build   # full build
-   npm run lint    # code style
-   ```
+4. **Check**: `npm run check && npm run build && npm run lint`.
 
-6. **Commit and push**:
-   ```bash
-   git add src/content/projects/your-project.md
-   git commit -m "feat: add project writeup for Your Project Name"
-   git push
-   ```
-
-   GitHub Actions will automatically:
-   - Run all checks
-   - Build the site
-   - Deploy to production
+5. **Commit**: `git add src/content/projects/<slug>.md && git commit -m "docs: add writeup for <slug>"`.
 
 ## Editing Data Files
 
-### Update stats (`src/content/data/stats.json`)
+### Generated vs. hand-authored content
 
-Stats appear on the home page. Only `verified: true` stats show up:
+**Machine-owned (do NOT hand-edit; regenerate from the HUB):**
+- `src/content/synced/**` (identity, experience, stats, capabilities, projects, manifest)
+- `public/resume.json`, `public/llms.txt`
+- `public/robots.txt`
 
-```json
-[
-  {
-    "value": "15+",
-    "label": "years of production engineering",
-    "footnote": "",
-    "verified": true
-  }
-]
+These are written by `job_hunt publish export`. Regenerate with:
+
+```bash
+python -m job_hunt.cli publish export --out ../portfolio
 ```
 
-Edit to update metrics as your experience grows.
+**Human-owned:** `src/content/writing/*.md`, `content/source/**`, `docs/**`, and all
+pages/components not listed above.
 
-### Update capabilities (`src/content/data/capabilities.json`)
+Project metadata (summary, status, featured, stack, repo, ...) lives in
+`src/content/synced/projects.json`. The markdown files under `src/content/projects/`
+carry only a title and the prose body; project frontmatter is not the metadata source.
 
-Update core capabilities with descriptions:
+### Update stats (`src/content/synced/stats.json`)
 
-```json
-[
-  {
-    "title": "Agent integration",
-    "description": "MCP protocol design, agent peer protocols, feedback systems"
-  }
-]
+Do not edit by hand. Stats are `claims` in the HUB vault; each needs evidence and an
+as-of date to be exportable. Manage with:
+
+```bash
+python -m job_hunt.cli claim add --key years_production --value "15+" \
+  --label "years of production engineering" --evidence "<url>" --as-of 2026-01-01 --visibility public
 ```
 
-### Update experience (`src/content/data/experience.json`)
+### Update capabilities (`src/content/synced/capabilities.json`)
 
-Work history timeline (appears on /experience and home):
+Do not edit by hand. Capabilities are derived from `tech_used` on public projects.
 
-```json
-[
-  {
-    "company": "Company Name",
-    "role": "Your Title",
-    "years": "2023–present",
-    "note": "Optional: what you worked on"
-  }
-]
-```
+### Update experience (`src/content/synced/experience.json`)
 
-### Update contact links (`src/content/data/links.json`)
+Do not edit by hand. Managed as experiences in the HUB vault; set visibility and a
+public alias with `job_hunt experience set-visibility`.
 
-Email, GitHub, LinkedIn URLs:
+### Update contact links
 
-```json
-{
-  "email": "you@example.com",
-  "github": "https://github.com/yourname",
-  "linkedin": "https://linkedin.com/in/yourname"
-}
-```
+Do not edit by hand. Managed with `job_hunt identity set`.
 
 ## Adding Blog Posts (Optional)
 
@@ -195,21 +142,18 @@ const result = await doSomething();
 
 ## Confidentiality
 
-If a project involves **employer work** (Wells Fargo):
+Employer-confidentiality is enforced in the HUB, not in this repo:
 
-1. Use **generic language**: "enterprise platform", not product names
-2. Never include: internal diagrams, system names, metrics
-3. Set `confidential_review: true` in frontmatter
-4. Owner must review before production build proceeds
+1. The vault `visibility` gate — only `public` rows are exported.
+2. `public_alias` — a role's real company (e.g. Wells Fargo) is replaced by an
+   alias before it can reach the snapshot.
+3. The denylist (`data/denylist.txt` in the HUB, mirrored here) — `job_hunt
+   publish check` fails closed if a blocked term appears in the snapshot.
 
-The build will fail if confidential items haven't been cleared:
-```bash
-⚠️  Confidential projects requiring review:
-   - src/content/projects/mcp-gateway.md
-❌ Production build blocked: unreviewed confidential content.
-```
-
-To preview locally: `ALLOW_UNREVIEWED=1 npm run build`
+Use generic language ("enterprise platform", not product names) in writeups, and
+never enable a project for publishing without checking with the alias rules in
+mind. There is no per-file `confidential_review` flag anymore; the publish gate is
+the single control.
 
 ## Automation
 
@@ -219,45 +163,44 @@ Once you push to `main`, GitHub Actions:
 3. ✅ Builds the static site
 4. ✅ Checks all links work
 5. ✅ Runs accessibility audits
-6. ✅ Checks for blocked terms (denylist)
-7. ✅ Checks for em-dashes
-8. ✅ Deploys to production (if all checks pass)
+6. ✅ Validates the synced snapshot (`scripts/check-synced.ts`)
+7. ✅ Deploys to production (if all checks pass)
 
 No manual deploy needed.
 
 ## Common Tasks
 
 ### Change project order on /projects page
-Edit `order` field (lower = first). Projects sort by order value.
+Set `sort_order` on the vault project (`job_hunt project set-public <id> --order N`).
+Lower = first.
 
 ### Feature a project on home page
-Set `featured: true` in frontmatter (max 3 featured).
+`job_hunt project set-public <id> --featured` (max 3 featured; the publish check
+fails above 3).
 
 ### Archive an old project
-Change `status: archived` — it still shows in /projects but with a different badge.
+`job_hunt project set-public <id> --status archived` — it still shows, with a badge.
 
 ### Update about section
-Edit TODO placeholders in `src/pages/about.astro`.
+Edit `src/pages/about.astro`.
 
 ### Add a resume PDF
-Upload files to:
-- `public/resume/Robin_Cloutier_Resume.pdf`
-- `public/resume/Robin_Cloutier_Executive_Summary.pdf`
-
-These will be downloadable from `/resume`.
+Upload files to `public/resume/`. The generated `.docx` (Phase 2) is written by the
+exporter; PDFs, if used, are hand-placed.
 
 ## Troubleshooting
 
 ### Build fails with "Denied term found"
-One of the denylist terms appeared in your content. Remove it or update `scripts/denylist.txt`.
+A denylist term appeared in content. Remove it or update `scripts/denylist.txt`.
 
 ### Links to projects broken
-Use internal paths: `/projects/your-project`, not `http://example.com/projects/...`
+Project routes come from `synced/projects.json`; a missing route means the project
+has no `public_slug`, or the export drifted. Re-run `job_hunt publish export`.
 
 ### Project doesn't show up
-- Check frontmatter YAML syntax (no trailing colons)
-- Verify filename matches `src/content/projects/your-project.md`
-- Run `npm run build` locally to see errors
+- Confirm it is `visibility: public` with a `public_slug` in the vault.
+- Re-run `job_hunt publish export --out ../portfolio`.
+- Run `npm run build` locally to see errors.
 
 ### Image won't display
 - Place image in `public/images/`

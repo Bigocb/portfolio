@@ -3,8 +3,8 @@
 
 <footer>
   <div class="container">
-    <p>Self-hosted on my own servers. <a href="/colophon">How it's built.</a></p>
-    <nav>
+    <p>Self-hosted on my own servers. <a href="/colophon" class="inline-link">How it's built.</a></p>
+    <nav aria-label="Footer">
       <a href="/rss.xml">RSS</a>
       <a href="https://github.com">GitHub</a>
     </nav>
@@ -38,6 +38,10 @@
 
   a {
     color: var(--accent);
+  }
+
+  .inline-link {
+    text-decoration: underline;
   }
 
   a:hover {

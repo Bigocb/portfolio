@@ -9,14 +9,14 @@ This file lists all placeholders and decisions that require owner input before t
   - [ ] How you work (working style, values, approach)
   - [ ] What you do outside of code
 
-- [ ] **Contact page** (`src/content/data/links.json`)
+- [ ] **Contact page** (`src/content/synced/identity.json` via the HUB)
   - [ ] Verify email address is correct
   - [ ] Verify GitHub URL
   - [ ] Update LinkedIn URL
 
 ## Work history and skills
 
-- [ ] **Experience data** (`src/content/data/experience.json`)
+- [ ] **Experience data** (HUB vault, `job_hunt experience set-visibility`)
   - [ ] Verify work history entries
   - [ ] Update company names (currently generic)
   - [ ] Verify dates and job titles
@@ -24,18 +24,13 @@ This file lists all placeholders and decisions that require owner input before t
 
 - [ ] **Resume page** (`src/pages/resume.astro`)
   - [ ] Create or provide resume content
-  - [ ] Upload `public/resume/Robin_Cloutier_Resume.pdf`
-  - [ ] Upload `public/resume/Robin_Cloutier_Executive_Summary.pdf`
-
-- [ ] **Resume source** (for HTML rendering)
-  - [ ] Create `content/source/resume.md` with work history
 
 ## Metrics and stats
 
-- [ ] **Impact stats** (`src/content/data/stats.json`)
-  - [ ] Verify the three verified metrics are accurate
-  - [ ] Add a fourth verified metric (currently placeholder)
-  - [ ] Update footnote for "agents" metric to actual date
+- [ ] **Impact stats** (HUB claims, `job_hunt claim add`)
+  - [ ] Verify the verified metrics are accurate
+  - [ ] Add a fourth verified metric
+  - [ ] Update footnote for the "agents" metric to the actual date
 
 ## Hosting and infrastructure
 
@@ -45,28 +40,8 @@ This file lists all placeholders and decisions that require owner input before t
 
 ## Project writeups
 
-Each of these 5 seed projects needs detailed content:
-
-- [ ] **Conclave** (`src/content/projects/conclave.md`)
-  - [ ] Problem section (what and why)
-  - [ ] Approach (design decisions, alternatives)
-  - [ ] Architecture (diagram + prose)
-  - [ ] What was hard (real problems and solutions)
-  - [ ] Results and what you'd change
-
-- [ ] **stcommand** (`src/content/projects/stcommand.md`)
-  - Same sections as Conclave
-
-- [ ] **HUNTLOG** (`src/content/projects/huntlog.md`)
-  - Same sections as Conclave
-  - [ ] Add demo link if available
-
-- [ ] **MicroK8s home lab** (`src/content/projects/microk8s-homelab.md`)
-  - Same sections as Conclave
-
-- [ ] **MCP gateway** (`src/content/projects/mcp-gateway.md`)
-  - [ ] Review confidential content before clearing `confidential_review: true`
-  - Same sections as Conclave
+Project metadata is published from the HUB vault. Optional prose writeups live in
+`src/content/projects/<public_slug>.md` (title + body). None exist yet.
 
 ## Domain and deployment
 
@@ -94,10 +69,11 @@ These are out of scope for v1 but noted for later:
 
 ## Wells Fargo confidentiality
 
-- [ ] Review all Wells Fargo mentions for generic language
-- [ ] Clear `confidential_review: true` flags on projects after review
+- [ ] Review all employer mentions for generic language
+- [ ] Set `public_alias` on any role whose company must not be named
 - [ ] Verify no internal product/system names in content
-- [ ] Check denylist in `scripts/denylist.txt` for blocked terms
+- [ ] Check denylist in `scripts/denylist.txt` (and the HUB `data/denylist.txt`)
+- [ ] Run `job_hunt publish check` — it fails closed on any blocked term
 
 ## Publishing checklist
 
@@ -106,11 +82,11 @@ These are out of scope for v1 but noted for later:
 - [ ] `npm run test` passes
 - [ ] Navigation links all work
 - [ ] Dark mode works
-- [ ] All TODO placeholders filled
 - [ ] Domain is set up and DNS configured
-- [ ] TLS certificate ready (Caddy handles auto-renewal)
-- [ ] Server is running and responding on production domain
+- [ ] TLS certificate ready
+- [ ] Server is running and responding on the production domain
 
 ## Questions?
 
-Refer to `PORTFOLIO_PLAN.md` section 6 (Content model) for schema details and data structure.
+See `docs/CONTENT.md` and the HUB `IMPLEMENTATION_RECONCILIATION.md` for the
+content model and publish flow.

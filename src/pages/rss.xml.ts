@@ -1,25 +1,22 @@
 import rss from '@astrojs/rss';
-import { getCollection } from 'astro:content';
+import type { APIContext } from 'astro';
+import { projectsData } from '../lib/synced';
 
-export async function GET(context: any) {
-  const projects = await getCollection('projects');
+export async function GET(context: APIContext) {
+  const projects = projectsData.filter(p => p.public_slug);
 
   return rss({
     title: 'Robin Cloutier | Projects',
     description: 'Projects and writeups from Robin Cloutier, Senior Software Engineer.',
-    site: context.site,
-    items: projects
-      .filter(p => !p.data.confidential_review)
-      .map(project => {
-        const year = typeof project.data.year === 'number'
-          ? project.data.year
-          : parseInt(String(project.data.year).split('-')[0]);
-        return {
-          title: project.data.title,
-          description: project.data.summary,
-          pubDate: new Date(year, 0, 1),
-          link: `/projects/${project.slug}`,
-        };
-      }),
+    site: context.site ?? 'https://example.com',
+    items: projects.map(project => {
+      const year = parseInt(String(project.year ?? '').split('-')[0]) || 2024;
+      return {
+        title: project.name,
+        description: project.description ?? '',
+        pubDate: new Date(year, 0, 1),
+        link: `/projects/${project.public_slug}`,
+      };
+    }),
   });
 }

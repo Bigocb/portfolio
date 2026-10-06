@@ -1,0 +1,16 @@
+# Robin Cloutier
+> Senior Software Engineer | AI Platform and Infrastructure
+
+I build the plumbing that lets AI agents reach real systems safely, and the pipelines that get them into production. 15+ years across backend services, Kubernetes platforms, and data systems.
+
+## Projects
+- [Lead Infrastructure & DevOps Consultant at Archipelago AI](https://jobs.cloutier.work/projects/gke-platform): 2024 - Present
+
+## Experience
+- Archipelago AI, Lead Infrastructure & DevOps Consultant (2024-present)
+
+## Claims
+- 15+ years of production engineering (as of 2026-10-01; evidence: https://github.com/Bigocb)
+
+## Machine-readable
+- https://jobs.cloutier.work/resume.json

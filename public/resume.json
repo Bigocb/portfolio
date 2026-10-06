@@ -1,0 +1,38 @@
+{
+  "basics": {
+    "email": "bobby.cloutier@gmail.com",
+    "label": "Senior Software Engineer | AI Platform and Infrastructure",
+    "name": "Robin Cloutier",
+    "profiles": [
+      {
+        "network": "GitHub",
+        "url": "https://github.com/Bigocb"
+      },
+      {
+        "network": "LinkedIn",
+        "url": "https://linkedin.com/in/bobby-cloutier"
+      }
+    ],
+    "summary": "I build the plumbing that lets AI agents reach real systems safely, and the pipelines that get them into production. 15+ years across backend services, Kubernetes platforms, and data systems.",
+    "url": "https://jobs.cloutier.work"
+  },
+  "projects": [
+    {
+      "description": "2024 - Present",
+      "name": "Lead Infrastructure & DevOps Consultant at Archipelago AI"
+    }
+  ],
+  "work": [
+    {
+      "highlights": [
+        "Architected and operate a cloud-native Kubernetes platform on GKE using GitOps (ArgoCD, Kargo) for fully automated promotion pipelines across environments",
+        "Migrated ArgoCD from v2.12 to v3.1 as a self-managed GitOps deployment; replaced nginx with Higress API gateway for unified ingress and traffic routing",
+        "Built full observability stack: Loki + Mimir + Grafana with OTLP telemetry pipelines ingesting Dagger build system traces and application metrics"
+      ],
+      "name": "Archipelago AI",
+      "position": "Lead Infrastructure & DevOps Consultant",
+      "startDate": "2024 - Present",
+      "summary": "Cloud-native Kubernetes platform on GKE"
+    }
+  ]
+}

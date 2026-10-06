@@ -10,13 +10,14 @@ test.describe('smoke tests', () => {
 
   test('navigation links are accessible', async ({ page }) => {
     await page.goto('/');
-    const nav = page.locator('nav');
+    const nav = page.locator('nav[aria-label="Primary"]');
     await expect(nav).toBeVisible();
   });
 
-  test('404 page is accessible', async ({ page }) => {
-    await page.goto('/this-does-not-exist');
-    expect(page.url()).toContain('404');
+  test('404 page renders not-found content', async ({ page }) => {
+    const res = await page.goto('/this-does-not-exist');
+    expect(res?.status()).toBe(404);
+    await expect(page.locator('h1')).toHaveText('404');
   });
 
   test('keyboard navigation works', async ({ page }) => {
@@ -27,5 +28,19 @@ test.describe('smoke tests', () => {
       el === document.activeElement
     );
     expect(isFocused).toBe(true);
+  });
+
+  test('resume.json is served and parses', async ({ request }) => {
+    const res = await request.get('/resume.json');
+    expect(res.status()).toBe(200);
+    const body = await res.json();
+    expect(body.basics.name).toBeTruthy();
+  });
+
+  test('home page includes Person JSON-LD', async ({ page }) => {
+    await page.goto('/');
+    const ld = await page.locator('script[type="application/ld+json"]').first().textContent();
+    const data = JSON.parse(ld || '{}');
+    expect(data['@type']).toBe('Person');
   });
 });

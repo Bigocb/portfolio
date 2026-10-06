@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
-
-import experience from '../content/data/experience.json';
+import { experience, capabilities } from '../lib/synced';
 ---
 
 <Base
@@ -17,9 +16,9 @@ import experience from '../content/data/experience.json';
           <div class="timeline-marker"></div>
           <div class="timeline-content">
             <h2>{job.company}</h2>
-            <p class="role">{job.role}</p>
+            <p class="role">{job.title}</p>
             <p class="years">{job.years}</p>
-            {job.note && <p class="note">{job.note}</p>}
+            {job.public_note && <p class="note">{job.public_note}</p>}
           </div>
         </div>
       ))}
@@ -27,7 +26,14 @@ import experience from '../content/data/experience.json';
 
     <section class="skills">
       <h2>Skills</h2>
-      <p>TODO(owner): List key skills, technologies, and areas of expertise.</p>
+      <ul class="capabilities-list">
+        {capabilities.map(cap => (
+          <li>
+            <strong>{cap.title}</strong>
+            <p>{cap.description}</p>
+          </li>
+        ))}
+      </ul>
     </section>
 
     <div class="nav-back">

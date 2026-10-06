@@ -1,0 +1,36 @@
+[
+  {
+    "bullets": [
+      {
+        "audience": null,
+        "content": "Architected and operate a cloud-native Kubernetes platform on GKE using GitOps (ArgoCD, Kargo) for fully automated promotion pipelines across environments",
+        "variant_type": "long"
+      },
+      {
+        "audience": null,
+        "content": "Migrated ArgoCD from v2.12 to v3.1 as a self-managed GitOps deployment; replaced nginx with Higress API gateway for unified ingress and traffic routing",
+        "variant_type": "long"
+      },
+      {
+        "audience": null,
+        "content": "Built full observability stack: Loki + Mimir + Grafana with OTLP telemetry pipelines ingesting Dagger build system traces and application metrics",
+        "variant_type": "long"
+      }
+    ],
+    "company": "Archipelago AI",
+    "demo_url": null,
+    "description": "2024 - Present",
+    "end_date": null,
+    "featured": 1,
+    "impact": null,
+    "name": "Lead Infrastructure & DevOps Consultant at Archipelago AI",
+    "public_slug": "gke-platform",
+    "repo_url": null,
+    "role": "Sole architect",
+    "sort_order": 1,
+    "stack": [],
+    "start_date": null,
+    "status": "active",
+    "year": "2024"
+  }
+]
