@@ -4,13 +4,16 @@
 I build the plumbing that lets AI agents reach real systems safely, and the pipelines that get them into production. 15+ years across backend services, Kubernetes platforms, and data systems.
 
 ## Projects
-- [Lead Infrastructure & DevOps Consultant at Archipelago AI](https://jobs.cloutier.work/projects/gke-platform): 2024 - Present
+- [Lead Infrastructure & DevOps Consultant at Archipelago AI](https://me.cloutier.work/projects/gke-platform): 2024 - Present
 
 ## Experience
 - Archipelago AI, Lead Infrastructure & DevOps Consultant (2024-present)
+- Wells Fargo, Software Engineer (Contractor) (Apri-present)
+- Credit Karma, Software Engineer (Char-June)
+- Red Ventures, Software Engineer (Fort-Sept)
 
 ## Claims
 - 15+ years of production engineering (as of 2026-10-01; evidence: https://github.com/Bigocb)
 
 ## Machine-readable
-- https://jobs.cloutier.work/resume.json
+- https://me.cloutier.work/resume.json
