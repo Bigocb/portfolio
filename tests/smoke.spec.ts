@@ -43,4 +43,13 @@ test.describe('smoke tests', () => {
     const data = JSON.parse(ld || '{}');
     expect(data['@type']).toBe('Person');
   });
+
+  test('tailored page is noindex and not in the sitemap', async ({ page, request }) => {
+    const res = await page.goto('/for/example-token');
+    expect(res?.status()).toBe(200);
+    const robots = await page.locator('meta[name="robots"]').getAttribute('content');
+    expect(robots).toContain('noindex');
+    const sitemap = await (await request.get('/sitemap-0.xml')).text();
+    expect(sitemap).not.toContain('/for/');
+  });
 });

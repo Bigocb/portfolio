@@ -2,7 +2,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://example.com',
+  site: 'https://me.cloutier.work',
   vite: {
     ssr: {
       external: ['sharp']
@@ -10,6 +10,7 @@ export default defineConfig({
   },
   output: 'static',
   integrations: [
-    sitemap()
+    // Tailored /for/<token> pages are private and must not be indexed.
+    sitemap({ filter: (page) => !page.includes('/for/') })
   ]
 });

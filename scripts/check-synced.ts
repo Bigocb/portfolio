@@ -1,4 +1,4 @@
-import { readFileSync, existsSync } from 'fs';
+import { readFileSync, existsSync, readdirSync } from 'fs';
 import { resolve, join } from 'path';
 
 import {
@@ -8,6 +8,7 @@ import {
   manifestSchema,
   projectsDataSchema,
   statsSchema,
+  tailoredSchema,
 } from '../src/content/schemas';
 
 const SYNCED = resolve('src', 'content', 'synced');
@@ -62,6 +63,20 @@ if (existsSync(resumePath)) {
   if (!resume.basics?.name) problems.push('public/resume.json: missing basics.name');
 } else {
   problems.push('public/resume.json: missing');
+}
+
+// Tailored pages (may be absent if no application is enabled).
+const tailoredDir = join(SYNCED, 'tailored');
+if (existsSync(tailoredDir)) {
+  for (const name of readdirSync(tailoredDir)) {
+    if (!name.endsWith('.json')) continue;
+    const data = readJson(join(tailoredDir, name));
+    try {
+      tailoredSchema.parse(data);
+    } catch (err) {
+      problems.push(`tailored/${name}: ${(err as Error).message}`);
+    }
+  }
 }
 
 if (problems.length) {

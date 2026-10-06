@@ -1,0 +1,73 @@
+---
+import type { ProjectMeta } from '../lib/synced';
+
+interface Props {
+  project: ProjectMeta;
+}
+
+const { project } = Astro.props;
+---
+
+<article class="project-card">
+  <div class="card-header">
+    <h3>
+      <a href={`/projects/${project.public_slug}`}>{project.name}</a>
+    </h3>
+    {project.status && <span class={`status status-${project.status}`}>{project.status}</span>}
+  </div>
+  <p class="summary">{project.description}</p>
+  <div class="card-meta">
+    {project.year && <span class="year">{project.year}</span>}
+    {project.role && <span class="role">{project.role}</span>}
+  </div>
+</article>
+
+<style>
+  .project-card {
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+  }
+
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-header h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .card-header a {
+    color: var(--ink);
+  }
+
+  .summary {
+    margin: 0.5rem 0;
+    font-size: 0.95rem;
+    color: var(--muted);
+  }
+
+  .card-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .status {
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    background: var(--accent-soft, #e8f0fe);
+    color: var(--accent);
+    white-space: nowrap;
+  }
+</style>

@@ -1,0 +1,11 @@
+{
+  "bullets": [{"content": "Built a Kubernetes platform on GKE", "project_slug": "gke-platform"}],
+  "claims": ["years_production"],
+  "company": "Example Corp",
+  "featured_slugs": ["gke-platform"],
+  "generated_at": "2026-10-06T00:00:00",
+  "intro": "Hello Example Corp team. This page highlights the parts of my work most relevant to the Platform Engineer role.",
+  "project_order": ["gke-platform"],
+  "title": "Platform Engineer",
+  "token": "example-token"
+}
