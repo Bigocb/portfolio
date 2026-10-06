@@ -1,0 +1,19 @@
+# Production image for the SITE behind Traefik / Cloudflare Tunnel.
+#
+# The tunnel/ingress terminates TLS and forwards plain HTTP to this container,
+# so there is no Caddy auto-HTTPS here (see Caddyfile.proxy).
+#
+# Build from the repo root:
+#   docker build -f deploy/Dockerfile.proxy -t portfolio:local .
+FROM node:22.12.0-alpine AS builder
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --no-audit --no-fund
+COPY . .
+RUN npm run build
+
+# Serve stage
+FROM caddy:2-alpine
+COPY deploy/Caddyfile.proxy /etc/caddy/Caddyfile
+COPY --from=builder /app/dist /srv/dist
+EXPOSE 80

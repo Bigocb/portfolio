@@ -1,0 +1,13 @@
+{
+  "files": {
+    "public/llms.txt": "e23c294809f4e06ebd4e1ccdfdec1e1210ea02d2a90293d73e708483bd7e3bbf",
+    "public/resume.json": "33cfe72dd09fcdc67c61f7adecb52ca199e5efa93af48e90e154c25bf8b6d48c",
+    "src/content/synced/capabilities.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+    "src/content/synced/experience.json": "fee5040acb26a113fdbff80c45ad9118c6a551da8f9025089f744bcc07afab73",
+    "src/content/synced/identity.json": "b82b3f704d327776c9c578153d24ab782bc8f5ebc5e40a4f70e2509c0b1b8c0a",
+    "src/content/synced/projects.json": "849bda6931f476bc76d6da9618b1a550ba847c2c63971bacc1b340dc72a3e76d",
+    "src/content/synced/stats.json": "205323e0541e900a4e527f6839eb9ba0204c4bf11513baf6820dcf705d40e6b8"
+  },
+  "generated_at": "2026-10-06T00:44:36",
+  "hub_version": "0.1.0"
+}
