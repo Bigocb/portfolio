@@ -36,10 +36,15 @@ import Base from '../layouts/Base.astro';
 
       <h3>Infrastructure</h3>
       <ul>
-        <li><strong>Web server:</strong> Caddy (automatic HTTPS, reverse proxy)</li>
+        <li><strong>Web server:</strong> Caddy behind Traefik / Cloudflare Tunnel</li>
         <li><strong>Container:</strong> Docker (multi-stage build)</li>
-        <li><strong>Deployment:</strong> GitHub Actions CI/CD</li>
-        <li><strong>Where it runs:</strong> TODO(owner): Describe your server setup (e.g., "home lab", "personal VM", "MicroK8s cluster")</li>
+        <li><strong>Content:</strong> generated from my private experience vault and published by pull request</li>
+        <li><strong>Where it runs:</strong> a personal home-lab server</li>
+      </ul>
+
+      <h3>Agent access</h3>
+      <ul>
+        <li>A read-only MCP server exposes the published snapshot at <code>/mcp</code> on the hub, so agents and tooling can query only what is already public.</li>
       </ul>
 
       <h3>Security and performance</h3>
