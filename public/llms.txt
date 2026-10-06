@@ -8,12 +8,10 @@ I build the plumbing that lets AI agents reach real systems safely, and the pipe
 
 ## Experience
 - Archipelago AI, Lead Infrastructure & DevOps Consultant (2024-present)
-- Wells Fargo, Software Engineer (Contractor) (Apri-present)
-- Credit Karma, Software Engineer (Char-June)
-- Red Ventures, Software Engineer (Fort-Sept)
 
 ## Claims
 - 15+ years of production engineering (as of 2026-10-01; evidence: https://github.com/Bigocb)
 
 ## Machine-readable
 - https://me.cloutier.work/resume.json
+- MCP: https://jobs.cloutier.work/mcp

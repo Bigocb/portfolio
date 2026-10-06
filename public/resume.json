@@ -31,25 +31,8 @@
       ],
       "name": "Archipelago AI",
       "position": "Lead Infrastructure & DevOps Consultant",
-      "startDate": "2024 - Present",
+      "startDate": "2024-01-01",
       "summary": "Cloud-native Kubernetes platform on GKE"
-    },
-    {
-      "name": "Wells Fargo",
-      "position": "Software Engineer (Contractor)",
-      "startDate": "April 2025 - Present"
-    },
-    {
-      "endDate": "June 2021 - November 2024",
-      "name": "Credit Karma",
-      "position": "Software Engineer",
-      "startDate": "Charlotte, NC"
-    },
-    {
-      "endDate": "September 2018 - May 2021",
-      "name": "Red Ventures",
-      "position": "Software Engineer",
-      "startDate": "Fort Mill, SC"
     }
   ]
 }
