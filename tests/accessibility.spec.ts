@@ -1,5 +1,11 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { readFileSync } from 'fs';
+import { resolve } from 'path';
+
+const syncedProjects = JSON.parse(
+  readFileSync(resolve('src/content/synced/projects.json'), 'utf-8')
+) as { public_slug?: string }[];
 
 test.describe('accessibility', () => {
   test('home page has no accessibility violations', async ({ page }) => {
@@ -15,7 +21,9 @@ test.describe('accessibility', () => {
   });
 
   test('project detail page has no accessibility violations', async ({ page }) => {
-    await page.goto('/projects/conclave');
+    // Use the first published project so this does not depend on a specific slug.
+    const slug = syncedProjects.find(p => p.public_slug)?.public_slug;
+    await page.goto(slug ? `/projects/${slug}` : '/projects');
     const results = await new AxeBuilder({ page }).analyze();
     expect(results.violations).toEqual([]);
   });
