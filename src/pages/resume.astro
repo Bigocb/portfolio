@@ -1,5 +1,15 @@
 ---
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
 import Base from '../layouts/Base.astro';
+import { identity, experience, capabilities } from '../lib/synced';
+
+// The exporter writes public/resume/<basename>.docx; link it only if present
+// so a build without it does not 404. The basename matches the exporter's
+// PORTFOLIO_RESUME_BASENAME default.
+const basename = 'Resume';
+const docxPath = `/resume/${basename}.docx`;
+const hasDocx = existsSync(resolve('public', 'resume', `${basename}.docx`));
 ---
 
 <Base
@@ -11,30 +21,48 @@ import Base from '../layouts/Base.astro';
       <div class="container">
         <h1>Resume</h1>
         <div class="download-links">
-          <a href="#" class="btn">📄 Download PDF Resume</a>
-          <a href="#" class="btn">📋 Download Executive Summary</a>
+          {hasDocx ? (
+            <a href={docxPath} class="btn">Download Word resume</a>
+          ) : (
+            <a href="/resume.json" class="btn btn-secondary">View machine-readable resume</a>
+          )}
+          <a href="/resume.json" class="btn btn-secondary">resume.json</a>
         </div>
       </div>
     </section>
 
     <section class="resume-content">
       <div class="container prose">
-        <h2>TODO: Resume content</h2>
-        <p>The HTML resume will render from content/source/resume.md. Owner to provide.</p>
+        <h2>Summary</h2>
+        {identity.tagline && <p><strong>{identity.tagline}</strong></p>}
+        {identity.pitch && <p>{identity.pitch}</p>}
 
-        <h3>Sections to include:</h3>
-        <ul>
-          <li>Professional summary</li>
-          <li>Core competencies</li>
-          <li>Professional experience</li>
-          <li>Education</li>
-          <li>Certifications (if any)</li>
-          <li>Publications or speaking (if any)</li>
-        </ul>
+        <h2>Experience</h2>
+        {experience.length === 0 ? (
+          <p>No public experience yet.</p>
+        ) : (
+          experience.map((job) => (
+            <div class="role">
+              <h3>{job.title}{job.company ? ` — ${job.company}` : ''}</h3>
+              {job.years && <p class="years">{job.years}</p>}
+              {job.public_note && <p>{job.public_note}</p>}
+            </div>
+          ))
+        )}
 
-        <div class="note-box">
-          <strong>Note:</strong> PDF downloads require files at public/resume/Robin_Cloutier_Resume.pdf and public/resume/Robin_Cloutier_Executive_Summary.pdf.
-        </div>
+        <h2>Skills</h2>
+        {capabilities.length === 0 ? (
+          <p>No public skills yet.</p>
+        ) : (
+          <ul>
+            {capabilities.map((cap) => (
+              <li><strong>{cap.title}:</strong> {cap.description}</li>
+            ))}
+          </ul>
+        )}
+
+        <p class="note">This resume is generated from the same source as the rest of this
+        site. A machine-readable copy is available at <a href="/resume.json">/resume.json</a>.</p>
       </div>
     </section>
 
@@ -77,6 +105,12 @@ import Base from '../layouts/Base.astro';
     transition: opacity 0.2s;
   }
 
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+  }
+
   .btn:hover {
     opacity: 0.9;
   }
@@ -89,12 +123,23 @@ import Base from '../layouts/Base.astro';
     max-width: var(--measure);
   }
 
-  .note-box {
-    padding: 1rem;
-    background: var(--surface);
-    border-left: 3px solid var(--accent);
-    border-radius: 4px;
-    margin: 2rem 0;
+  .role {
+    margin-bottom: 1.5rem;
+  }
+
+  .role h3 {
+    margin-bottom: 0.25rem;
+  }
+
+  .years {
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+
+  .note {
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    color: var(--muted);
   }
 
   .nav-back {
@@ -111,11 +156,6 @@ import Base from '../layouts/Base.astro';
     .nav-back,
     .download-links {
       display: none;
-    }
-
-    body {
-      background: white;
-      color: black;
     }
   }
 </style>

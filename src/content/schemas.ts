@@ -89,3 +89,18 @@ export const manifestSchema = z.object({
   hub_version: z.string(),
   files: z.record(z.string()),
 });
+
+/** Tailored application page (task 2.3). Public data only, reordered per role. */
+export const tailoredSchema = z.object({
+  token: z.string(),
+  company: z.string(),
+  title: z.string(),
+  generated_at: z.string(),
+  intro: z.string(),
+  featured_slugs: z.array(z.string()).default([]),
+  project_order: z.array(z.string()).default([]),
+  bullets: z
+    .array(z.object({ content: z.string(), project_slug: z.string() }))
+    .default([]),
+  claims: z.array(z.string()).default([]),
+});

@@ -1,0 +1,151 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
+import { projectsData, stats } from '../../lib/synced';
+
+export async function getStaticPaths() {
+  const tailored = await getCollection('tailored');
+  return tailored.map((entry) => ({
+    params: { token: entry.id },
+    props: { page: entry.data },
+  }));
+}
+
+const { page } = Astro.props;
+const bySlug = new Map(projectsData.map((p) => [p.public_slug, p]));
+const featured = page.featured_slugs.map((s) => bySlug.get(s)).filter(Boolean);
+const claimByKey = new Map(stats.map((s) => [s.key, s]));
+const claims = page.claims.map((k) => claimByKey.get(k)).filter(Boolean);
+---
+
+<Base title={`${page.title} — for ${page.company}`} description={page.intro} noindex={true}>
+  <div class="for-page">
+    <div class="container">
+      <header>
+        <h1>{page.title}</h1>
+        <p class="intro">{page.intro}</p>
+      </header>
+
+      {claims.length > 0 && (
+        <section class="stats">
+          {claims.map((c) => (
+            <div class="stat-tile">
+              <div class="stat-value">{c.value}</div>
+              <div class="stat-label">{c.label}</div>
+            </div>
+          ))}
+        </section>
+      )}
+
+      {featured.length > 0 && (
+        <section class="projects">
+          <h2>Relevant projects</h2>
+          <div class="projects-grid">
+            {featured.map((p) => <ProjectCard project={p} />)}
+          </div>
+        </section>
+      )}
+
+      {page.bullets.length > 0 && (
+        <section class="bullets">
+          <h2>Most relevant work</h2>
+          <ul>
+            {page.bullets.map((b) => (
+              <li>
+                {b.content}
+                {b.project_slug && (
+                  <a class="tag" href={`/projects/${b.project_slug}`}>{b.project_slug}</a>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <div class="nav-back">
+        <a href="/projects">All projects →</a>
+        <a href="/resume">Resume →</a>
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .for-page {
+    padding: 3rem var(--gutter);
+  }
+
+  .container {
+    max-width: var(--measure);
+    margin: 0 auto;
+  }
+
+  header h1 {
+    margin-bottom: 0.5rem;
+  }
+
+  .intro {
+    font-size: 1.1rem;
+    color: var(--muted);
+    margin-bottom: 2rem;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .stat-tile {
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: 6px;
+  }
+
+  .stat-value {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .stat-label {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .bullets ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .bullets li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tag {
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--accent);
+  }
+
+  .nav-back {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 2rem;
+  }
+
+  .nav-back a {
+    color: var(--accent);
+  }
+</style>

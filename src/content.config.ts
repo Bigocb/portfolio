@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { tailoredSchema } from './content/schemas';
 
 const projectsCollection = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
@@ -18,7 +19,14 @@ const writingCollection = defineCollection({
   }),
 });
 
+// Tailored application pages, one JSON file per enabled application. Machine-owned.
+const tailoredCollection = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/synced/tailored' }),
+  schema: tailoredSchema,
+});
+
 export const collections = {
   projects: projectsCollection,
   writing: writingCollection,
+  tailored: tailoredCollection,
 };
