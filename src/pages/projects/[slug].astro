@@ -1,33 +1,40 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { getCollection } from 'astro:content';
 import Base from '../../layouts/Base.astro';
+import ProjectProse from '../../components/ProjectProse.astro';
 import { projectsData } from '../../lib/synced';
 
+// Routes come from the published metadata (projects.json). A project may have
+// no prose body yet, so the markdown entry is optional.
 export async function getStaticPaths() {
-  const projects = await getCollection('projects');
-  return projects.map(project => ({
-    params: { slug: project.id },
-    props: { project }
-  }));
+  const entries = await getCollection('projects');
+  const byId = new Map(entries.map(e => [e.id, e]));
+  return projectsData
+    .filter(p => p.public_slug)
+    .map(p => ({
+      params: { slug: p.public_slug as string },
+      props: { slug: p.public_slug as string, entry: byId.get(p.public_slug as string) ?? null },
+    }));
 }
 
-const { project } = Astro.props;
-const { Content } = await render(project);
-const meta = projectsData.find(p => p.public_slug === project.id);
-const allProjects = [...projectsData].sort((a, b) => (a.sort_order ?? 999) - (b.sort_order ?? 999));
-const projectIndex = allProjects.findIndex(p => p.public_slug === project.id);
+const { slug, entry } = Astro.props;
+const meta = projectsData.find(p => p.public_slug === slug);
+const allProjects = [...projectsData]
+  .filter(p => p.public_slug)
+  .sort((a, b) => (a.sort_order ?? 999) - (b.sort_order ?? 999));
+const projectIndex = allProjects.findIndex(p => p.public_slug === slug);
 const prevProject = projectIndex > 0 ? allProjects[projectIndex - 1] : null;
 const nextProject = projectIndex >= 0 && projectIndex < allProjects.length - 1 ? allProjects[projectIndex + 1] : null;
 ---
 
 <Base
-  title={`${meta?.name ?? project.id} | Robin Cloutier`}
+  title={`${meta?.name ?? slug} | Robin Cloutier`}
   description={meta?.description ?? ''}
 >
   <article class="project-detail">
     <div class="container">
       <header class="project-header">
-        <h1>{meta?.name ?? project.id}</h1>
+        <h1>{meta?.name ?? slug}</h1>
         <div class="project-meta">
           {meta?.year && <span>{meta.year}</span>}
           {meta?.role && <span>•</span>}
@@ -65,11 +72,23 @@ const nextProject = projectIndex >= 0 && projectIndex < allProjects.length - 1 ?
         )}
       </header>
 
-      <div class="content-wrapper">
-        <div class="prose">
-          <Content />
+      {entry ? (
+        <div class="content-wrapper">
+          <div class="prose">
+            <ProjectProse entry={entry} />
+          </div>
         </div>
-      </div>
+      ) : (meta?.bullets ?? []).length > 0 ? (
+        <div class="content-wrapper">
+          <div class="prose">
+            <ul>
+              {(meta?.bullets ?? []).map(b => (
+                <li>{b.content}</li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      ) : null}
 
       <nav class="project-nav">
         {prevProject && (
