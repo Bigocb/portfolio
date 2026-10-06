@@ -1,5 +1,5 @@
-# Blocked terms for Wells Fargo confidentiality
-# Add internal system, product, or platform names here
+# Blocked terms for employer confidentiality.
+# Internal system, product, or platform names first.
 Minerva
 Vesta
 DaVinci
@@ -8,3 +8,8 @@ NOVA
 NGDC
 Arize
 PBDKD
+
+# Employer names that must never appear in public content unless a public_alias
+# is deliberately set. Listed here as a backstop so a forgotten alias fails the
+# publish check rather than leaking.
+Wells Fargo
