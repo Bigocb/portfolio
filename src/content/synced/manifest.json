@@ -1,14 +1,15 @@
 {
   "files": {
-    "public/llms.txt": "ad3087568292dadc79da6ff8a82f12c93be1ba6dc0d7ad0d06510317df693db1",
-    "public/resume.json": "601de0a2636615b39316df86be744cfcd1e6dbec68aad30b8cfd4c19a246acca",
-    "public/resume/Resume.docx": "d5b15fd987aeffb95bb3bc7a0bc5adf21259dd4f480fa59f6c7fee97359862b6",
+    "public/llms.txt": "27fa1d20ed6c5210d7779672febad88b160d47356aabc1aa432971d45bb5b18b",
+    "public/resume.json": "851023456f0549a2ffb031b9f316c5c8acfaea613482038786fc788b570c65d2",
+    "public/resume/Resume.docx": "a9412291562b3864bca1825778841f05333fabf50c02f2b5f581a5e730715993",
+    "src/content/projects/software-engineer-financial.md": "92c09e2d7471664c0a795cb561ab7b4cee1a403e45b0f5d48ace9bf3431a41ab",
     "src/content/synced/capabilities.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
-    "src/content/synced/experience.json": "d09e033369a0442f9071b2fa5a96a1452873f7f776b0bd26203c432b6f10c3e6",
-    "src/content/synced/identity.json": "639918d46ad5ba915da6d70428421e585580262196fa72608ddb638e6e4a6ede",
-    "src/content/synced/projects.json": "849bda6931f476bc76d6da9618b1a550ba847c2c63971bacc1b340dc72a3e76d",
+    "src/content/synced/experience.json": "b5857633fc928677748b4bb6e4ed339fa89d47c5c0bb7ab03ec3ccb5e221eb97",
+    "src/content/synced/identity.json": "ccbec29a7ad7230da1108ea6336f9da33c9729d0cc7af4bc23efbea32ea7042c",
+    "src/content/synced/projects.json": "ef189be9d46f70d18a9712e2dc4314a46eaa4d153823d9d36aa5d2d92ccf48c5",
     "src/content/synced/stats.json": "205323e0541e900a4e527f6839eb9ba0204c4bf11513baf6820dcf705d40e6b8"
   },
-  "generated_at": "2026-10-06T21:07:46",
+  "generated_at": "2026-10-07T00:58:34",
   "hub_version": "0.1.0"
 }
