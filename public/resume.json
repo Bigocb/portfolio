@@ -20,6 +20,10 @@
     {
       "description": "2024 - Present",
       "name": "Lead Infrastructure & DevOps Consultant at Archipelago AI"
+    },
+    {
+      "description": "April 2025 - Present",
+      "name": "Software Engineer at  Large Financial Institution"
     }
   ],
   "work": [
@@ -33,6 +37,29 @@
       "position": "Lead Infrastructure & DevOps Consultant",
       "startDate": "2024-01-01",
       "summary": "Cloud-native Kubernetes platform on GKE"
+    },
+    {
+      "name": "Large Financial Institution",
+      "position": "Software Engineer (Contractor)",
+      "startDate": "2025-04-01"
+    },
+    {
+      "endDate": "2024-11-01",
+      "name": "Credit Karma",
+      "position": "Software Engineer",
+      "startDate": "2021-06-01"
+    },
+    {
+      "endDate": "2021-05-01",
+      "name": "Red Ventures",
+      "position": "Software Engineer",
+      "startDate": "2018-09-01"
+    },
+    {
+      "endDate": "2018-09-01",
+      "name": "Large Healthcare Purchasing Organization",
+      "position": "Software Engineer",
+      "startDate": "2009-05-01"
     }
   ]
 }
