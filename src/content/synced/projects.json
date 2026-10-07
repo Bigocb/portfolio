@@ -32,5 +32,23 @@
     "start_date": null,
     "status": "active",
     "year": "2024"
+  },
+  {
+    "bullets": [],
+    "company": "Large Financial Institution",
+    "demo_url": null,
+    "description": "April 2025 - Present",
+    "end_date": null,
+    "featured": 1,
+    "impact": null,
+    "name": "Software Engineer at  Large Financial Institution",
+    "public_slug": "software-engineer-financial",
+    "repo_url": null,
+    "role": null,
+    "sort_order": null,
+    "stack": [],
+    "start_date": null,
+    "status": null,
+    "year": null
   }
 ]
