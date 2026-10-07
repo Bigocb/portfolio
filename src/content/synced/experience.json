@@ -8,5 +8,45 @@
     "start_date": "2024-01-01",
     "title": "Lead Infrastructure & DevOps Consultant",
     "years": "2024-present"
+  },
+  {
+    "company": "Large Financial Institution",
+    "employment_type": null,
+    "end_date": null,
+    "location": "",
+    "public_note": null,
+    "start_date": "2025-04-01",
+    "title": "Software Engineer (Contractor)",
+    "years": "2025-present"
+  },
+  {
+    "company": "Credit Karma",
+    "employment_type": null,
+    "end_date": "2024-11-01",
+    "location": "Charlotte, NC",
+    "public_note": null,
+    "start_date": "2021-06-01",
+    "title": "Software Engineer",
+    "years": "2021-2024"
+  },
+  {
+    "company": "Red Ventures",
+    "employment_type": null,
+    "end_date": "2021-05-01",
+    "location": "Fort Mill, SC",
+    "public_note": null,
+    "start_date": "2018-09-01",
+    "title": "Software Engineer",
+    "years": "2018-2021"
+  },
+  {
+    "company": "Large Healthcare Purchasing Organization",
+    "employment_type": null,
+    "end_date": "2018-09-01",
+    "location": "",
+    "public_note": null,
+    "start_date": "2009-05-01",
+    "title": "Software Engineer",
+    "years": "2009-2018"
   }
 ]
