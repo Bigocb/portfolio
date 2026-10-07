@@ -5,9 +5,14 @@ I build the plumbing that lets AI agents reach real systems safely, and the pipe
 
 ## Projects
 - [Lead Infrastructure & DevOps Consultant at Archipelago AI](https://me.cloutier.work/projects/gke-platform): 2024 - Present
+- [Software Engineer at  Large Financial Institution](https://me.cloutier.work/projects/software-engineer-financial): April 2025 - Present
 
 ## Experience
 - Archipelago AI, Lead Infrastructure & DevOps Consultant (2024-present)
+- Large Financial Institution, Software Engineer (Contractor) (2025-present)
+- Credit Karma, Software Engineer (2021-2024)
+- Red Ventures, Software Engineer (2018-2021)
+- Large Healthcare Purchasing Organization, Software Engineer (2009-2018)
 
 ## Claims
 - 15+ years of production engineering (as of 2026-10-01; evidence: https://github.com/Bigocb)
