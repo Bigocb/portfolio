@@ -1,7 +1,7 @@
 {
   "basics": {
-    "email": "bobby.cloutier@gmail.com",
-    "label": "Senior Software Engineer | AI Platform and Infrastructure",
+    "email": "blcloutier@outlook.com",
+    "label": "Senior Software Engineer | Agentic | Backend | Infrastructure",
     "name": "Robin Cloutier",
     "profiles": [
       {
@@ -13,7 +13,7 @@
         "url": "https://linkedin.com/in/bobby-cloutier"
       }
     ],
-    "summary": "I build the plumbing that lets AI agents reach real systems safely, and the pipelines that get them into production. 15+ years across backend services, Kubernetes platforms, and data systems.",
+    "summary": "I build AI agents and the systems that make them dependable in real enterprise settings. Right now that means turning business-team prototypes into production agents with Google ADK, building the retrieval and data tools they rely on, and running the MCP server that gives them governed access to backend systems. Before agents, I spent 15+ years in Python and JVM backends, data pipelines, and Kubernetes platforms. That background shapes how I build agents: deterministic checks where code can decide, the model where it can’t, and a human in the loop for the calls that matter.",
     "url": "https://me.cloutier.work"
   },
   "projects": [
